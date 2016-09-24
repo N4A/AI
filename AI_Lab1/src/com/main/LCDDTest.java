@@ -32,6 +32,7 @@ public class LCDDTest implements BpInterface{
 		double[][] trainExamplesInput = new double[trainNumber][inputSize];
 		double[][] trainExamplesOutput = new double[trainNumber][outputSize];
 		File file = new File("testbp/lcdd.txt");
+		@SuppressWarnings("resource")
 		BufferedReader fReader = new BufferedReader(new FileReader(file));
 		if (fReader.ready()) {
 			for (int i = 0; i < trainNumber; i++) {
@@ -63,6 +64,7 @@ public class LCDDTest implements BpInterface{
 		System.out.println(bp.test(new double[]{0,1,1,1,1,1,1})+1);
 		
 		while (true){
+			@SuppressWarnings("resource")
 			Scanner input = new Scanner(System.in);
 			double[] test = new double[inputSize];
 			System.out.println("enter your test cases:7 number in {0,1}");
@@ -107,6 +109,7 @@ public class LCDDTest implements BpInterface{
 	@Override
 	public void decideWeights(double[][] Theta1, double[][] Theta2) throws IOException {
 		File file = new File("testbp/weightOfLCDD.txt");
+		@SuppressWarnings("resource")
 		BufferedReader fReader = new BufferedReader(new FileReader(file));
 		if (fReader.ready()) {
 			//init Theta1
