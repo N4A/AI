@@ -46,7 +46,7 @@ public interface BpInterface {
 		int columns = weights[0].length;
 		// A good choice of eposilon_init is
 		// Math.sqrt(6)/Math.sqrt((rows+columns));
-		double epsilon = Math.sqrt(3) / Math.sqrt((rows + columns));
+		double epsilon = Math.sqrt(6)/Math.sqrt((rows+columns));
 
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++) {

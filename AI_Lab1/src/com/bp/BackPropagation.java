@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.xml.parsers.DocumentBuilder;
+
 /**
  * @author duocai
  *
@@ -20,7 +22,7 @@ public class BackPropagation {
 	private double rate;// learning rate
 	private int iterationMax;
 	
-	final private double lambda = 0.01;
+	private double lambda;
 
 	// train examples
 	private double[][] trainExamplesInput;
@@ -31,6 +33,12 @@ public class BackPropagation {
 	private double[][] Theta2;
 
 	private BpInterface bpCtrl;
+	
+	//参数
+	private double[] hidden;
+	private double[] output;
+	
+	private int numOfExam;
 
 	/**
 	 * 
@@ -40,14 +48,16 @@ public class BackPropagation {
 	 * @param rate
 	 *            -- learning rate
 	 * @param iterationMax
+	 * @param lambda
 	 */
 	public BackPropagation(int inputLayerSize, int hiddenLayerSize, int outputLayerSize, double rate, int iterationMax,
-			BpInterface bpCtrl) {
+			double lambda, BpInterface bpCtrl) {
 		this.inputLayerSize = inputLayerSize;
 		this.hiddenLayerSize = hiddenLayerSize;
 		this.outputLayerSize = outputLayerSize;
 		this.rate = rate;
 		this.iterationMax = iterationMax;
+		this.lambda = lambda;
 
 		Theta1 = new double[hiddenLayerSize][inputLayerSize + 1];
 		Theta2 = new double[outputLayerSize][hiddenLayerSize + 1];
@@ -58,6 +68,61 @@ public class BackPropagation {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		hidden = new double[hiddenLayerSize+1];
+		hidden[0] = 1;//add bias
+		output = new double[outputLayerSize];
+	}
+	
+	/**
+	 * 向前传播，算出结果
+	 * @input - 某个测试样咧
+	 */
+	private void forwardPropagation(double[] input){
+		// forward propagation
+		// get hidden
+		double[] hiddenRaw = matrixMultiVec(Theta1, input);
+		for (int j = 0; j < hiddenLayerSize; j++) {
+			hidden[j + 1] = sigmoid(hiddenRaw[j]);
+		}
+		// get output
+		double[] outputRaw = matrixMultiVec(Theta2, hidden);
+		for (int j = 0; j < outputLayerSize; j++) {
+			output[j] = sigmoid(outputRaw[j]);
+		}
+	}
+	
+	/**
+	 * 反向传播，算出参数误差
+	 * @param deltaTheta1
+	 * @param deltaTheta2
+	 * @param desiredOutput
+	 * @param input
+	 */
+	private void backPropagation(double[][] deltaTheta1, double[][] deltaTheta2, double[] desiredOutput, double[] input) {
+		for (int j = 0; j < deltaTheta2.length; j++) {
+			// get deltaTheta2
+			double d = desiredOutput[j];// desired value;
+			double o = output[j];// real output value
+			for (int j2 = 0; j2 < deltaTheta2[0].length; j2++) {
+				deltaTheta2[j][j2] = rate * (d - o) * o * (1 - o) * hidden[j2];
+			}
+		}
+		// get deltaTheta2;
+		for (int j = 0; j < deltaTheta1.length; j++) { 
+			double h = hidden[j];
+			for (int j2 = 0; j2 < deltaTheta1[0].length; j2++) {
+				double totalj = 0;// all influence on hidden layer unit j
+				for (int k = 0; k < deltaTheta2.length; k++) {
+					double d = desiredOutput[k];// desired value;
+					double o = output[k];// real output value
+					totalj += Theta2[k][j] * o * (1 - o) * (d - o);//积累到hidden layer的误差
+				}
+				double i = input[j2];
+				deltaTheta1[j][j2] = rate * h * (1 - h) * i * totalj;
+			}
+		}
+
 	}
 
 	/**
@@ -75,28 +140,14 @@ public class BackPropagation {
 		for (int j = 0; j < inputraw.length; j++) {
 			input[j + 1] = inputraw[j];
 		}
+		
+		//get uouput
+		forwardPropagation(input);
 
-		double[] output = new double[outputLayerSize];
-		double[] hidden = new double[hiddenLayerSize + 1];
-		hidden[0] = 1;// add bias
-		// forward propagation to get hidden and output
-		// get hidden
-		double[] hiddenRaw = matrixMultiVec(Theta1, input);// input added bias
-															// before, no need
-															// here
-		for (int j = 0; j < hiddenLayerSize; j++) {
-			hidden[j + 1] = sigmoid(hiddenRaw[j]);
-		}
-		// get output
-		double[] outputRaw = matrixMultiVec(Theta2, hidden);
-		for (int j = 0; j < outputLayerSize; j++) {
-			output[j] = sigmoid(outputRaw[j]);
-		}
-
-		return showMax(output);
+		return getMax();
 	}
 
-	private int showMax(double[] output) {
+	private int getMax() {
 		double max = output[0];
 		int maxId = 0;
 		for (int i = 1; i < output.length; i++) {
@@ -117,20 +168,21 @@ public class BackPropagation {
 	 * @param trainExamplesOutput
 	 */
 	public void setTrainExamples(double[][] trainExamplesInput, double[][] trainExamplesOutput) {
+		numOfExam = trainExamplesInput.length;
 		if (trainExamplesInput[0].length != inputLayerSize) {
 			showError("the number of input-features should be equal to input layer size.");
 		}
 		if (trainExamplesOutput[0].length != outputLayerSize) {
 			showError("the number of output-labels should be equal to output layer size.");
 		}
-		if (trainExamplesInput.length != trainExamplesOutput.length) {
+		if (numOfExam != trainExamplesOutput.length) {
 			showError("the input and output number should be equal.");
 		}
-		this.trainExamplesInput = new double[trainExamplesInput.length][trainExamplesInput[0].length + 1];
-		for (int i = 0; i < trainExamplesInput.length; i++) {
+		this.trainExamplesInput = new double[numOfExam][trainExamplesInput[0].length + 1];
+		for (int i = 0; i < numOfExam; i++) {
 			this.trainExamplesInput[i][0] = 1;
 		}
-		for (int i = 0; i < trainExamplesInput.length; i++) {
+		for (int i = 0; i < numOfExam; i++) {
 			for (int j = 0; j < trainExamplesInput[0].length; j++) {
 				this.trainExamplesInput[i][j + 1] = trainExamplesInput[i][j];
 			}
@@ -143,64 +195,24 @@ public class BackPropagation {
 	 */
 	public void startTrain() {
 		int iteration = 0;
-//		int update = 800;// 更新频率
-		double cost = costFunction();
-		showIterationCost(iteration, cost, rate);//展示训练前cost初值
-		while (iteration < iterationMax) {
-			double rateTemp = 0;
-			rateTemp = bpCtrl.changeRate(cost, rate);
-			if (rateTemp == -1)
-				break;
-			else
-				rate = rateTemp;
+		while (iteration < iterationMax) {	
+			double cost = 0;//每次迭代重新计算cost
 			// get delta_weights
 			double[][] totalDeltaTheta1 = new double[Theta1.length][Theta1[0].length];
 			double[][] totalDeltaTheta2 = new double[Theta2.length][Theta2[0].length];
 			int i = 0;
-			for (; i < trainExamplesInput.length; i++) {
-				double[] output = new double[outputLayerSize];
-				double[] hidden = new double[hiddenLayerSize + 1];
-				hidden[0] = 1;// add bias
-				// forward propagation to get hidden and output
-				// get hidden
-				// input added bias before, no need here
-				double[] hiddenRaw = matrixMultiVec(Theta1, trainExamplesInput[i]);
-				for (int j = 0; j < hiddenLayerSize; j++) {
-					hidden[j + 1] = sigmoid(hiddenRaw[j]);
-				}
-				// get output
-				double[] outputRaw = matrixMultiVec(Theta2, hidden);
-				for (int j = 0; j < outputLayerSize; j++) {
-					output[j] = sigmoid(outputRaw[j]);
-				}
+			for (; i < numOfExam; i++) {
+				//forward propagation
+				forwardPropagation(trainExamplesInput[i]);
+				cost+= getOneExampleCost(trainExamplesOutput[i]);
 
 				// back propagation
 				double[][] deltaTheta1 = new double[Theta1.length][Theta1[0].length];
 				double[][] deltaTheta2 = new double[Theta2.length][Theta2[0].length];
-				for (int j = 0; j < deltaTheta2.length; j++) {
-					// get deltaTheta2
-					for (int j2 = 0; j2 < deltaTheta2[0].length; j2++) {
-						double d = trainExamplesOutput[i][j];// desired value;
-						double o = output[j];// real output value
-						deltaTheta2[j][j2] = rate * (d - o) * o * (1 - o) * hidden[j2];
-					}
-				}
-				// get deltaTheta2;
-				for (int j = 0; j < deltaTheta1.length; j++) {
-					for (int j2 = 0; j2 < deltaTheta1[0].length; j2++) {
-						double tempj = 0;// all influence on hidden layer unit j
-						for (int k = 0; k < deltaTheta2.length; k++) {
-							double d = trainExamplesOutput[i][k];// desired
-																	// value;
-							double o = output[k];// real output value
-							tempj += Theta2[k][j] * o * (1 - o) * (d - o);
-						}
-						double input = trainExamplesInput[i][j2];
-						deltaTheta1[j][j2] = rate * hidden[j] * (1 - hidden[j]) * input * tempj;
-					}
-				}
-
-				// add all examples influences
+				backPropagation(deltaTheta1, deltaTheta2, trainExamplesOutput[i],
+						trainExamplesInput[i]);
+				
+				// add this example's influences
 				for (int j = 0; j < deltaTheta2.length; j++) {
 					for (int j2 = 0; j2 < deltaTheta2[0].length; j2++) {
 						totalDeltaTheta2[j][j2] += deltaTheta2[j][j2];
@@ -211,63 +223,66 @@ public class BackPropagation {
 						totalDeltaTheta1[j][j2] += deltaTheta1[j][j2];
 					}
 				}
-
-//				if (i % update == update-1) {// 每 update个单位更新weights
-//					// update Theta1 and Theta2
-//					for (int k = 0; k < totalDeltaTheta2.length; k++) {
-//						for (int j = 0; j < totalDeltaTheta2[0].length; j++) {
-//							Theta2[k][j] += totalDeltaTheta2[k][j];
-//						}
-//					}
-//					for (int k = 0; k < totalDeltaTheta1.length; k++) {
-//						for (int j = 0; j < totalDeltaTheta1[0].length; j++) {
-//							Theta1[k][j] += totalDeltaTheta1[k][j];
-//						}
-//					}
-//					totalDeltaTheta1 = new double[Theta1.length][Theta1[0].length];
-//					totalDeltaTheta2 = new double[Theta2.length][Theta2[0].length];
-//
-//					iteration++;
-//					cost = costFunction();
-//					showIterationCost(iteration, cost, rate);
-//					// change cost and decide whether to stop iterations
-//					rateTemp = bpCtrl.changeRate(cost, rate);
-//					if (rateTemp == -1)
-//						break;
-//					else
-//						rate = rateTemp;
-//				}
 			}
-			//循环里还有未更新的delta weights
-//			if ((i-1)%update<update-1){
-				// update Theta1 and Theta2
-				for (int k = 0; k < totalDeltaTheta2.length; k++) {
-					for (int j = 0; j < totalDeltaTheta2[0].length; j++) {
-						Theta2[k][j] += totalDeltaTheta2[k][j];
+			//正则化,并计算cost正则项
+			double cost1 = 0;
+			double cost2 = 0;
+			for (int j = 0; j < Theta2.length; j++) {
+				for (int j2 = 0; j2 < Theta2[0].length; j2++) {
+					if (j2 != 0) {
+						totalDeltaTheta2[j][j2] -= lambda*Theta2[j][j2];
 					}
+					cost2 += lambda*Theta2[j][j2]*Theta2[j][j2];
 				}
-				for (int k = 0; k < totalDeltaTheta1.length; k++) {
-					for (int j = 0; j < totalDeltaTheta1[0].length; j++) {
-						Theta1[k][j] += totalDeltaTheta1[k][j];
+			}
+			for (int j = 0; j < Theta1.length; j++) {
+				for (int j2 = 0; j2 < Theta1[0].length; j2++) {
+					if (j2 != 0) {
+						totalDeltaTheta1[j][j2] -= lambda*Theta1[j][j2];
 					}
+					cost1 += lambda*Theta1[j][j2]*Theta1[j][j2];
 				}
-				totalDeltaTheta1 = new double[Theta1.length][Theta1[0].length];
-				totalDeltaTheta2 = new double[Theta2.length][Theta2[0].length];
-
-				iteration++;
-				cost = costFunction();
-				showIterationCost(iteration, cost, rate);
-				// change cost and decide whether to stop iterations
-				rate = rateTemp = bpCtrl.changeRate(cost, rate);
-//			}
+			}
+			cost = (cost + cost1 + cost2) / numOfExam / 2;
+			showIterationCost(iteration, cost, rate);
+			rate = bpCtrl.changeRate(cost, rate);
 			//达到要求时，则停止调整参数
-			if (rateTemp == -1) {
+			if (rate == -1) {
 				printWeight(bpCtrl.getPath());
 				break;
 			}
+			//update Theta
+			updateTheta(totalDeltaTheta1, totalDeltaTheta2);			
+			iteration++;
 		}
 	}
+	
+	/**
+	 * 更新参数
+	 * @param totalDeltaTheta1
+	 * @param totalDeltaTheta2
+	 */
+	private void updateTheta(double[][] totalDeltaTheta1, double[][] totalDeltaTheta2) {
+		for (int k = 0; k < totalDeltaTheta2.length; k++) {
+			for (int j = 0; j < totalDeltaTheta2[0].length; j++) {
+				Theta2[k][j] += totalDeltaTheta2[k][j]/numOfExam
+						- lambda*Theta2[k][j];
+			}
+		}
+		for (int k = 0; k < totalDeltaTheta1.length; k++) {
+			for (int j = 0; j < totalDeltaTheta1[0].length; j++) {
+				Theta1[k][j] += totalDeltaTheta1[k][j]/numOfExam
+						- lambda*Theta1[k][j];
+			}
+		}
+		totalDeltaTheta1 = new double[Theta1.length][Theta1[0].length];
+		totalDeltaTheta2 = new double[Theta2.length][Theta2[0].length];
+	}
 
+	/**
+	 * 输出训练好的权重
+	 * @param path
+	 */
 	private void printWeight(String path) {
 		System.out.println("The weights of Bp networks are outputed to " + path);
 		File file = new File(path);
@@ -304,9 +319,9 @@ public class BackPropagation {
 		for (int i = 0; i < mat.length; i++) {
 			int row = 0;
 			for (int j = 0; j < vec.length; j++) {
-				row += round6( mat[i][j] * vec[j]);
+				row += mat[i][j] * vec[j];
 			}
-			ret[i] = round6(row);
+			ret[i] = row;
 		}
 		return ret;
 	}
@@ -318,32 +333,39 @@ public class BackPropagation {
 	 */
 	private double costFunction() {
 		double error = 0;
-		for (int i = 0; i < trainExamplesInput.length; i++) {
-			double[] output = new double[outputLayerSize];
-			double[] hidden = new double[hiddenLayerSize + 1];
-			hidden[0] = 1;// add bias
-			// forward propagation
-			// get hidden
-			double[] hiddenRaw = matrixMultiVec(Theta1, trainExamplesInput[i]);// input
-																				// added
-																				// bias
-																				// before,
-																				// no
-																				// need
-																				// here
-			for (int j = 0; j < hiddenLayerSize; j++) {
-				hidden[j + 1] = sigmoid(hiddenRaw[j]);
-			}
-			// get output
-			double[] outputRaw = matrixMultiVec(Theta2, hidden);
-			for (int j = 0; j < outputLayerSize; j++) {
-				output[j] = sigmoid(outputRaw[j]);
-				// get error
-				error += Math.pow(trainExamplesOutput[i][j] - output[j], 2);
+		for (int i = 0; i < numOfExam; i++) {
+			forwardPropagation(trainExamplesInput[i]);		
+			//get error
+			error+= getOneExampleCost(trainExamplesOutput[i]);
+		}
+		double cost1 = 0;
+		double cost2 = 0;
+		for (int j = 0; j < Theta2.length; j++) {
+			for (int j2 = 0; j2 < Theta2[0].length; j2++) {
+				cost2 += lambda*Theta2[j][j2]*Theta2[j][j2];
 			}
 		}
-		error = error / trainExamplesOutput.length / 2;
+		for (int j = 0; j < Theta1.length; j++) {
+			for (int j2 = 0; j2 < Theta1[0].length; j2++) {
+				cost1 += lambda*Theta1[j][j2]*Theta1[j][j2];
+			}
+		}
+		error = (error + cost1 + cost2) / numOfExam / 2;
 		return error;
+	}
+	/**
+	 * 得到一个样本的误差
+	 * @param desiredOutput
+	 * @return
+	 */
+	private double getOneExampleCost(double[] desiredOutput) {
+		double err = 0;
+		for (int j = 0; j < outputLayerSize; j++) {
+			// get error
+			double error = desiredOutput[j] - output[j];
+			err += error*error;
+		}
+		return err;
 	}
 
 	/**
@@ -353,7 +375,7 @@ public class BackPropagation {
 	 * @return
 	 */
 	public double sigmoid(double x) {
-		return round6((1 / (1 + Math.exp(-x))));
+		return (1 / (1 + Math.exp(-x)));
 	}
 
 	/**
@@ -375,16 +397,29 @@ public class BackPropagation {
 	private void showIterationCost(int iteration, double cost, double rate) {
 		System.out.println("Iteration:\t" + iteration + "|Cost:\t" + cost + "|rate:\t" + rate);
 	}
-	
-	/**
-	 * 保留六位小数
-	 * @param num
-	 * @return
-	 */
-	private double round6(double num){
-		//return num;
-		return Math.round(num*100000)/100000.0;
-	}
-
-
 }
+//if (i % update == update-1) {// 每 update个单位更新weights
+//// update Theta1 and Theta2
+//for (int k = 0; k < totalDeltaTheta2.length; k++) {
+//	for (int j = 0; j < totalDeltaTheta2[0].length; j++) {
+//		Theta2[k][j] += totalDeltaTheta2[k][j];
+//	}
+//}
+//for (int k = 0; k < totalDeltaTheta1.length; k++) {
+//	for (int j = 0; j < totalDeltaTheta1[0].length; j++) {
+//		Theta1[k][j] += totalDeltaTheta1[k][j];
+//	}
+//}
+//totalDeltaTheta1 = new double[Theta1.length][Theta1[0].length];
+//totalDeltaTheta2 = new double[Theta2.length][Theta2[0].length];
+//
+//iteration++;
+//cost = costFunction();
+//showIterationCost(iteration, cost, rate);
+//// change cost and decide whether to stop iterations
+//rateTemp = bpCtrl.changeRate(cost, rate);
+//if (rateTemp == -1)
+//	break;
+//else
+//	rate = rateTemp;
+//}

@@ -16,19 +16,19 @@ import com.bp.BpInterface;
  * @author duocai
  *
  */
-public class LCDDTest implements BpInterface{
-	
+public class LCDDTest implements BpInterface {
+
 	/**
 	 * @param args
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
 		LCDDTest lcddTest = new LCDDTest();
 		int inputSize = 7;
 		int outputSize = 10;
 		int trainNumber = 10;
-		
-		//get input
+
+		// get input
 		double[][] trainExamplesInput = new double[trainNumber][inputSize];
 		double[][] trainExamplesOutput = new double[trainNumber][outputSize];
 		File file = new File("testbp/lcdd.txt");
@@ -42,28 +42,28 @@ public class LCDDTest implements BpInterface{
 					trainExamplesInput[i][j] = Double.parseDouble(tokens[j]);
 				}
 				for (int j = 0; j < outputSize; j++) {
-					trainExamplesOutput[i][j] = Double.parseDouble(tokens[j+inputSize]);
+					trainExamplesOutput[i][j] = Double.parseDouble(tokens[j + inputSize]);
 				}
 			}
 		}
-		
-		BackPropagation bp = new BackPropagation(inputSize, 18, outputSize, 0.3, 10,lcddTest);
+
+		BackPropagation bp = new BackPropagation(inputSize, 18, outputSize, 0.3, 5, 0.01, lcddTest);
 		bp.setTrainExamples(trainExamplesInput, trainExamplesOutput);
 		bp.startTrain();
-		
+
 		System.out.println("test:0123456789");
-		System.out.println(bp.test(new double[]{1,1,1,1,1,1,0})+1);
-		System.out.println(bp.test(new double[]{0,0,0,1,1,0,0})+1);
-		System.out.println(bp.test(new double[]{1,0,1,1,0,1,1})+1);
-		System.out.println(bp.test(new double[]{0,0,1,1,1,1,1})+1);
-		System.out.println(bp.test(new double[]{0,1,0,1,1,0,1})+1);
-		System.out.println(bp.test(new double[]{0,1,1,0,1,1,1})+1);
-		System.out.println(bp.test(new double[]{1,1,1,0,1,1,1})+1);
-		System.out.println(bp.test(new double[]{0,0,1,1,1,0,0})+1);
-		System.out.println(bp.test(new double[]{1,1,1,1,1,1,1})+1);
-		System.out.println(bp.test(new double[]{0,1,1,1,1,1,1})+1);
-		
-		while (true){
+		System.out.println((bp.test(new double[] { 1, 1, 1, 1, 1, 1, 0 }) + 1) % 10);
+		System.out.println(bp.test(new double[] { 0, 0, 0, 1, 1, 0, 0 }) + 1);
+		System.out.println(bp.test(new double[] { 1, 0, 1, 1, 0, 1, 1 }) + 1);
+		System.out.println(bp.test(new double[] { 0, 0, 1, 1, 1, 1, 1 }) + 1);
+		System.out.println(bp.test(new double[] { 0, 1, 0, 1, 1, 0, 1 }) + 1);
+		System.out.println(bp.test(new double[] { 0, 1, 1, 0, 1, 1, 1 }) + 1);
+		System.out.println(bp.test(new double[] { 1, 1, 1, 0, 1, 1, 1 }) + 1);
+		System.out.println(bp.test(new double[] { 0, 0, 1, 1, 1, 0, 0 }) + 1);
+		System.out.println(bp.test(new double[] { 1, 1, 1, 1, 1, 1, 1 }) + 1);
+		System.out.println(bp.test(new double[] { 0, 1, 1, 1, 1, 1, 1 }) + 1);
+
+		while (true) {
 			@SuppressWarnings("resource")
 			Scanner input = new Scanner(System.in);
 			double[] test = new double[inputSize];
@@ -71,40 +71,39 @@ public class LCDDTest implements BpInterface{
 			for (int i = 0; i < test.length; i++) {
 				test[i] = input.nextDouble();
 			}
-			System.out.println(bp.test(test)+1);
+			System.out.println((bp.test(test) + 1) % 10);
 		}
 	}
-	
+
 	/**
 	 * 制定改变cost的函数
+	 * 
 	 * @param origin
 	 * @return
 	 */
 	@Override
 	public double changeRate(double cost, double oldRate) {
-		if (cost < 0.0673){//origin:0.0674
+		if (cost < 0.0673) {// origin:0.06729
 			return -1;
 		}
 		if (cost < 0.08) {
 			return 0.0001;
-		}
-		else if (cost < 0.09) {
+		} else if (cost < 0.09) {
 			return 0.001;
-		}
-		else if (cost < 0.1) {
+		} else if (cost < 0.1) {
 			return 0.01;
-		}
-		else if (cost<0.15) {
+		} else if (cost < 0.15) {
 			return 0.1;
 		}
 		return oldRate;
 	}
-	
+
 	/**
 	 * 自决定初始参数,选择训练好的参数
+	 * 
 	 * @param Theta1
 	 * @param Theta2
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@Override
 	public void decideWeights(double[][] Theta1, double[][] Theta2) throws IOException {
@@ -112,7 +111,7 @@ public class LCDDTest implements BpInterface{
 		@SuppressWarnings("resource")
 		BufferedReader fReader = new BufferedReader(new FileReader(file));
 		if (fReader.ready()) {
-			//init Theta1
+			// init Theta1
 			for (int i = 0; i < Theta1.length; i++) {
 				String string = fReader.readLine();
 				String[] tokens = string.split(" ");
@@ -120,7 +119,7 @@ public class LCDDTest implements BpInterface{
 					Theta1[i][j] = Double.parseDouble(tokens[j]);
 				}
 			}
-			//init Theta2
+			// init Theta2
 			for (int i = 0; i < Theta2.length; i++) {
 				String string = fReader.readLine();
 				String[] tokens = string.split(" ");
@@ -128,7 +127,7 @@ public class LCDDTest implements BpInterface{
 					Theta2[i][j] = Double.parseDouble(tokens[j]);
 				}
 			}
-			
+
 		}
 	}
 

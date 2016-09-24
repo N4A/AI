@@ -46,7 +46,8 @@ public class CharacterTest implements BpInterface{
 			}
 		}
 		fReader.close();
-		BackPropagation bp = new BackPropagation(inputSize, 25, outputSize, 0.01, 50,bpCtrl);
+		BackPropagation bp = new BackPropagation(inputSize, 25, outputSize, 0.3,
+				1, 0.01, bpCtrl);
 		bp.setTrainExamples(trainExamplesInput, trainExamplesOutput);
 		bp.startTrain();
 		
@@ -80,7 +81,7 @@ public class CharacterTest implements BpInterface{
 	
 	@Override
 	public double changeRate(double cost, double oldRate) {
-		if (cost < 0.9){//origin:
+		if (cost < 1){//origin:
 			return -1;
 		}
 		else if (cost < 0.01) {

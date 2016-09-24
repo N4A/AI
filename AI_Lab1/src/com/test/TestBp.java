@@ -14,7 +14,7 @@ import com.bp.BpInterface;
  */
 public class TestBp {
 	
-	BackPropagation bp = new BackPropagation(1, 1, 1, 1, 1, new BpInterface() {
+	BackPropagation bp = new BackPropagation(1, 1, 1, 1, 1,4, new BpInterface() {
 		
 		@Override
 		public String getPath() {
