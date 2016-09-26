@@ -16,7 +16,7 @@ import com.bp.BpInterface;
  *
  */
 public class CharacterTest implements BpInterface{
-	
+	final static int outputSize = 8;
 	/**
 	 * @param args
 	 * @throws IOException 
@@ -25,7 +25,7 @@ public class CharacterTest implements BpInterface{
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		BpInterface bpCtrl = new CharacterTest();
 		int inputSize = 784;
-		int outputSize = 8;
+		
 		int trainNumber = 7780;
 		
 		//get input
@@ -65,7 +65,7 @@ public class CharacterTest implements BpInterface{
 				testExamples[j] = Double.parseDouble(tokens[j]);
 			}
 			//get output and change to vector
-			char result = (char) ('A' + bp.test(testExamples));
+			char result = (char) ('A' + getMax(bp.test(testExamples)));
 			char ans = tokens[tokens.length-1].charAt(0);
 			System.out.println("output:"+result+"|answer:"+ans);
 			if (ans == result) {
@@ -129,5 +129,18 @@ public class CharacterTest implements BpInterface{
 	public String getPath() {
 		return "testbp/weightOfCharacter.txt";
 	}
-
+	
+	private static int getMax(double[] output) {
+		double max = output[0];
+		int maxId = 0;
+		for (int i = 1; i < output.length; i++) {
+			if (output[i] > max) {
+				max = output[i];
+				maxId = i;
+			}
+		}
+		int ret = (maxId) % outputSize;
+		//System.out.println("the answer is: " + (maxId + 1) % outputLayerSize);
+		return ret;
+	}
 }

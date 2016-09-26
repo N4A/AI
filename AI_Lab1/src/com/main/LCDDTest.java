@@ -17,7 +17,7 @@ import com.bp.BpInterface;
  *
  */
 public class LCDDTest implements BpInterface {
-
+	final static int outputSize = 10;
 	/**
 	 * @param args
 	 * @throws IOException
@@ -25,7 +25,7 @@ public class LCDDTest implements BpInterface {
 	public static void main(String[] args) throws IOException {
 		LCDDTest lcddTest = new LCDDTest();
 		int inputSize = 7;
-		int outputSize = 10;
+
 		int trainNumber = 10;
 
 		// get input
@@ -52,16 +52,16 @@ public class LCDDTest implements BpInterface {
 		bp.startTrain();
 
 		System.out.println("test:0123456789");
-		System.out.println((bp.test(new double[] { 1, 1, 1, 1, 1, 1, 0 }) + 1) % 10);
-		System.out.println(bp.test(new double[] { 0, 0, 0, 1, 1, 0, 0 }) + 1);
-		System.out.println(bp.test(new double[] { 1, 0, 1, 1, 0, 1, 1 }) + 1);
-		System.out.println(bp.test(new double[] { 0, 0, 1, 1, 1, 1, 1 }) + 1);
-		System.out.println(bp.test(new double[] { 0, 1, 0, 1, 1, 0, 1 }) + 1);
-		System.out.println(bp.test(new double[] { 0, 1, 1, 0, 1, 1, 1 }) + 1);
-		System.out.println(bp.test(new double[] { 1, 1, 1, 0, 1, 1, 1 }) + 1);
-		System.out.println(bp.test(new double[] { 0, 0, 1, 1, 1, 0, 0 }) + 1);
-		System.out.println(bp.test(new double[] { 1, 1, 1, 1, 1, 1, 1 }) + 1);
-		System.out.println(bp.test(new double[] { 0, 1, 1, 1, 1, 1, 1 }) + 1);
+		System.out.println((getMax(bp.test(new double[] { 1, 1, 1, 1, 1, 1, 0 })) + 1) % 10);
+		System.out.println(getMax(bp.test(new double[] { 0, 0, 0, 1, 1, 0, 0 })) + 1);
+		System.out.println(getMax(bp.test(new double[] { 1, 0, 1, 1, 0, 1, 1 })) + 1);
+		System.out.println(getMax(bp.test(new double[] { 0, 0, 1, 1, 1, 1, 1 })) + 1);
+		System.out.println(getMax(bp.test(new double[] { 0, 1, 0, 1, 1, 0, 1 })) + 1);
+		System.out.println(getMax(bp.test(new double[] { 0, 1, 1, 0, 1, 1, 1 })) + 1);
+		System.out.println(getMax(bp.test(new double[] { 1, 1, 1, 0, 1, 1, 1 })) + 1);
+		System.out.println(getMax(bp.test(new double[] { 0, 0, 1, 1, 1, 0, 0 })) + 1);
+		System.out.println(getMax(bp.test(new double[] { 1, 1, 1, 1, 1, 1, 1 })) + 1);
+		System.out.println(getMax(bp.test(new double[] { 0, 1, 1, 1, 1, 1, 1 })) + 1);
 
 		while (true) {
 			@SuppressWarnings("resource")
@@ -71,7 +71,7 @@ public class LCDDTest implements BpInterface {
 			for (int i = 0; i < test.length; i++) {
 				test[i] = input.nextDouble();
 			}
-			System.out.println((bp.test(test) + 1) % 10);
+			System.out.println((getMax(bp.test(test)) + 1) % 10);
 		}
 	}
 
@@ -134,5 +134,18 @@ public class LCDDTest implements BpInterface {
 	@Override
 	public String getPath() {
 		return "testbp/weightOfLCDD.txt";
+	}
+	private static int getMax(double[] output) {
+		double max = output[0];
+		int maxId = 0;
+		for (int i = 1; i < output.length; i++) {
+			if (output[i] > max) {
+				max = output[i];
+				maxId = i;
+			}
+		}
+		int ret = (maxId) % outputSize;
+		//System.out.println("the answer is: " + (maxId + 1) % outputLayerSize);
+		return ret;
 	}
 }

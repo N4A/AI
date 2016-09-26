@@ -130,7 +130,7 @@ public class BackPropagation {
 	 * 
 	 * @param inputraw
 	 */
-	public int test(double[] inputraw) {
+	public double[] test(double[] inputraw) {
 		if (inputraw.length != inputLayerSize) {
 			showError("test input not valid, the features number should be equal to training examples");
 		}
@@ -144,21 +144,7 @@ public class BackPropagation {
 		//get uouput
 		forwardPropagation(input);
 
-		return getMax();
-	}
-
-	private int getMax() {
-		double max = output[0];
-		int maxId = 0;
-		for (int i = 1; i < output.length; i++) {
-			if (output[i] > max) {
-				max = output[i];
-				maxId = i;
-			}
-		}
-		int ret = (maxId) % outputLayerSize;
-		//System.out.println("the answer is: " + (maxId + 1) % outputLayerSize);
-		return ret;
+		return output;
 	}
 
 	/**
