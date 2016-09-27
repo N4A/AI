@@ -8,8 +8,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import javax.xml.parsers.DocumentBuilder;
-
 /**
  * @author duocai
  *
@@ -105,7 +103,7 @@ public class BackPropagation {
 			double d = desiredOutput[j];// desired value;
 			double o = output[j];// real output value
 			for (int j2 = 0; j2 < deltaTheta2[0].length; j2++) {
-				deltaTheta2[j][j2] = rate * (d - o) * o * (1 - o) * hidden[j2];
+				deltaTheta2[j][j2] = rate * (d - o) *o * (1 - o)* hidden[j2];/* o * (1 - o)*/
 			}
 		}
 		// get deltaTheta2;

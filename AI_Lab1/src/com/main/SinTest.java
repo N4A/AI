@@ -3,22 +3,17 @@
  */
 package com.main;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 
 import com.bp.BackPropagation;
 import com.bp.BpInterface;
-
-import junit.framework.Test;
 
 /**
  * @author duocai
  *
  */
 public class SinTest implements BpInterface {
-	private static final int BinaryLen = 32;
+	private static final int BinaryLen = 1;
 
 	/**
 	 * @param args
@@ -26,11 +21,6 @@ public class SinTest implements BpInterface {
 	 * @throws NumberFormatException
 	 */
 	public static void main(String[] args) throws NumberFormatException, IOException {
-		float a = (float) Math.sin(Math.PI / 2);
-		float b = (float) Math.sin(-Math.PI / 2);
-		int a1 = Float.floatToIntBits(a);
-		String astring = Integer.toBinaryString(a1);
-		System.out.println(astring);
 		int inputSize = BinaryLen;
 		int outputSize = BinaryLen;
 		int trainNumber = 100;
@@ -41,13 +31,13 @@ public class SinTest implements BpInterface {
 		double base = -Math.PI / 2;
 		double step = Math.PI / trainNumber;
 		for (int i = 0; i < trainNumber; i++) {
-			trainExamplesInput[i] = getBinary(base);
-			trainExamplesOutput[i] = getBinary(sin(base));
+			trainExamplesInput[i] = new double[]{base};//getBinary(base);
+			trainExamplesOutput[i] = new double[]{sin(base)};//getBinary(sin(base));
 			base += step;
 		}
 		BpInterface bpCtrl = new SinTest();
-		BackPropagation bp = new BackPropagation(inputSize, 48,
-				outputSize, 0.3, 10000, 0.01, bpCtrl);
+		BackPropagation bp = new BackPropagation(inputSize, 111,
+				outputSize, 0.1, 1000, 0.01, bpCtrl);
 		bp.setTrainExamples(trainExamplesInput, trainExamplesOutput);
 		bp.startTrain();
 				
@@ -59,6 +49,9 @@ public class SinTest implements BpInterface {
 			double test = Math.random() * Math.PI - Math.PI / 2;
 			double[] input =  getBinary(test);
 			double result = getDouble(bp.test(input));
+			if (test < 0) {
+				result = -result;
+			}
 			double desired = sin(test);
 			System.out.println(result + "/" + desired);
 			double err = result-desired;
@@ -68,6 +61,8 @@ public class SinTest implements BpInterface {
 	}
 
 	private static double getDouble(double[] test) {
+		if (BinaryLen == 1)
+			return test[0];
 		double ret =0;
 		for (int i = 0; i < BinaryLen; i++) {
 			ret += Math.round(test[i])*Math.pow(2, i);
@@ -87,6 +82,8 @@ public class SinTest implements BpInterface {
 	 * @return
 	 */
 	private static double[] getBinary(double ad) {
+		if(ad < 0)
+			ad = -ad;
 		int ai = (int)(ad*Math.pow(2, BinaryLen));
 		double[] binary = new double[BinaryLen];
 		for (int i = 0; i < BinaryLen; i++) {
