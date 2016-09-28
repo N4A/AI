@@ -47,7 +47,7 @@ public class LCDDTest implements BpInterface {
 			}
 		}
 
-		BackPropagation bp = new BackPropagation(inputSize, 18, outputSize, 0.3, 5, 0.01, lcddTest);
+		BackPropagation bp = new BackPropagation(inputSize, 18, outputSize, 0.3, 50000, 0.01, lcddTest);
 		bp.setTrainExamples(trainExamplesInput, trainExamplesOutput);
 		bp.startTrain();
 

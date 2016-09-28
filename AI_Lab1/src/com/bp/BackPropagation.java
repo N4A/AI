@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import static com.util.Matrix.*;
+
 /**
  * @author duocai
  *
@@ -85,9 +87,7 @@ public class BackPropagation {
 		}
 		// get output
 		double[] outputRaw = matrixMultiVec(Theta2, hidden);
-		for (int j = 0; j < outputLayerSize; j++) {
-			output[j] = sigmoid(outputRaw[j]);
-		}
+		output = sigmoid(outputRaw);
 	}
 	
 	/**
@@ -98,29 +98,14 @@ public class BackPropagation {
 	 * @param input
 	 */
 	private void backPropagation(double[][] deltaTheta1, double[][] deltaTheta2, double[] desiredOutput, double[] input) {
-		for (int j = 0; j < deltaTheta2.length; j++) {
-			// get deltaTheta2
-			double d = desiredOutput[j];// desired value;
-			double o = output[j];// real output value
-			for (int j2 = 0; j2 < deltaTheta2[0].length; j2++) {
-				deltaTheta2[j][j2] = rate * (d - o) *o * (1 - o)* hidden[j2];/* o * (1 - o)*/
-			}
-		}
-		// get deltaTheta2;
-		for (int j = 0; j < deltaTheta1.length; j++) { 
-			double h = hidden[j];
-			for (int j2 = 0; j2 < deltaTheta1[0].length; j2++) {
-				double totalj = 0;// all influence on hidden layer unit j
-				for (int k = 0; k < deltaTheta2.length; k++) {
-					double d = desiredOutput[k];// desired value;
-					double o = output[k];// real output value
-					totalj += Theta2[k][j] * o * (1 - o) * (d - o);//积累到hidden layer的误差
-				}
-				double i = input[j2];
-				deltaTheta1[j][j2] = rate * h * (1 - h) * i * totalj;
-			}
-		}
-
+		double[] delta3 = vecSubVec(output, desiredOutput);
+		//delta2 = Theta2_O'*delta3.*sigmoidGradient(z2);
+		double[][] Theta2_1 = rmFirstColumn(Theta2);
+		double[] delta2 = dotMulti(matrixMultiVec(transpose(Theta2_1), delta3), 
+				dotMulti(hidden, numSubVec(1, hidden)));
+		
+		deltaTheta2 = vecMulVec(delta3, hidden, rate);	
+		deltaTheta1 = vecMulVec(delta2, input, rate);
 	}
 
 	/**
@@ -197,16 +182,8 @@ public class BackPropagation {
 						trainExamplesInput[i]);
 				
 				// add this example's influences
-				for (int j = 0; j < deltaTheta2.length; j++) {
-					for (int j2 = 0; j2 < deltaTheta2[0].length; j2++) {
-						totalDeltaTheta2[j][j2] += deltaTheta2[j][j2];
-					}
-				}
-				for (int j = 0; j < deltaTheta1.length; j++) {
-					for (int j2 = 0; j2 < deltaTheta1[0].length; j2++) {
-						totalDeltaTheta1[j][j2] += deltaTheta1[j][j2];
-					}
-				}
+				Add(totalDeltaTheta2, deltaTheta2);
+				Add(totalDeltaTheta1, deltaTheta1);
 			}
 			//正则化,并计算cost正则项
 			double cost1 = 0;
@@ -292,25 +269,6 @@ public class BackPropagation {
 	}
 
 	/**
-	 * Matrix * vector
-	 * 
-	 * @param mat
-	 * @param vec
-	 * @return
-	 */
-	private double[] matrixMultiVec(double[][] mat, double[] vec) {
-		double[] ret = new double[mat.length];
-		for (int i = 0; i < mat.length; i++) {
-			int row = 0;
-			for (int j = 0; j < vec.length; j++) {
-				row += mat[i][j] * vec[j];
-			}
-			ret[i] = row;
-		}
-		return ret;
-	}
-
-	/**
 	 * calculate error cost
 	 * 
 	 * @return
@@ -360,6 +318,20 @@ public class BackPropagation {
 	 */
 	public double sigmoid(double x) {
 		return (1 / (1 + Math.exp(-x)));
+	}
+	
+	/**
+	 * sigmoid function
+	 * 
+	 * @param x
+	 * @return
+	 */
+	public double[] sigmoid(double[] x) {
+		double[] c = new double[x.length];
+		for (int j = 0; j < c.length; j++) {
+			c[j] = sigmoid(x[j]);
+		}
+		return c;
 	}
 
 	/**

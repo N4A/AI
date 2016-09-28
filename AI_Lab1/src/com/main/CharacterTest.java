@@ -71,12 +71,33 @@ public class CharacterTest implements BpInterface{
 			if (ans == result) {
 				right += 1;
 			}
-			if (i>1000) {
-				break;
+		}
+		tReader.close();
+		double trainAccuracy = (right*1.0/i)*100;
+		
+		test = new File("dataset_image/validation/validation.txt");
+		tReader = new BufferedReader(new FileReader(test));
+		i = 0;
+		right = 0;
+		while (tReader.ready()) {
+			i++;
+			String string = tReader.readLine();
+			String[] tokens = string.split(" ");
+			double[] testExamples = new double[inputSize];
+			for (int j = 0; j < inputSize; j++) {
+				testExamples[j] = Double.parseDouble(tokens[j]);
+			}
+			//get output and change to vector
+			char result = (char) ('A' + getMax(bp.test(testExamples)));
+			char ans = tokens[tokens.length-1].charAt(0);
+			System.out.println("output:"+result+"|answer:"+ans);
+			if (ans == result) {
+				right += 1;
 			}
 		}
 		tReader.close();
-		System.out.println(right+"/"+i);
+		System.out.println("train set accuracy: " + trainAccuracy);
+		System.out.println("validation set accuracy: " + (right*1.0/i)*100);
 	}
 	
 	@Override

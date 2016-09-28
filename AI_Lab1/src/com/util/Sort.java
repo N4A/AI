@@ -13,12 +13,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import javax.imageio.stream.ImageInputStream;
+
 /**
  * @author duocai
  *  
  */
 public class Sort {
-
+	private static final String inputPath = "dataset_image/validation/validation.txt";
+	private static final String outputPath = "dataset_image/validation/validation2.txt";
 	/**
 	 * @param args
 	 * @throws IOException 
@@ -26,6 +29,7 @@ public class Sort {
 	 */
 	@SuppressWarnings("resource")
 	public static void main(String[] args) throws NumberFormatException, IOException {
+		
 		int outputSize = 8;
 		List<List<String>> list = new CopyOnWriteArrayList<>();
 		for (int i = 0; i < outputSize; i++) {
@@ -33,7 +37,7 @@ public class Sort {
 		}
 		
 		//get input
-		File input = new File("dataset_image/train/train.txt");
+		File input = new File(inputPath);
 		BufferedReader fReader = new BufferedReader(new FileReader(input));
 		while (fReader.ready()) {
 			String string = fReader.readLine();
@@ -45,7 +49,7 @@ public class Sort {
 		fReader.close();
 		
 		//output
-		File output = new File("dataset_image/train/handledTrain2.txt");
+		File output = new File(outputPath);
 		BufferedWriter bWriter = new BufferedWriter(new FileWriter(output));
 		while (true) {
 			for (int i = 0; i < list.size(); i++) {
