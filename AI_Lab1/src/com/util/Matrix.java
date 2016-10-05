@@ -76,12 +76,12 @@ public class Matrix {
 	 * @param b
 	 * @return
 	 */
-	public static double[][] vecMulVec(double[] a, double[] b, double rate) {
+	public static double[][] vecMulVec(double[] a, double[] b) {
 		double[][] c = new double[a.length][b.length];
 		
 		for (int i = 0; i < c.length; i++) {
 			for (int j = 0; j < c[0].length; j++) {
-				c[i][j] = rate*a[i]*b[j];
+				c[i][j] = a[i]*b[j];
 			}
 		}
 		

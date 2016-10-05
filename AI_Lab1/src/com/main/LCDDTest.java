@@ -47,7 +47,7 @@ public class LCDDTest implements BpInterface {
 			}
 		}
 
-		BackPropagation bp = new BackPropagation(inputSize, 18, outputSize, 0.3, 50000, 0.01, lcddTest);
+		BackPropagation bp = new BackPropagation(inputSize, 18, outputSize, 0.3, 50000, 0, lcddTest);
 		bp.setTrainExamples(trainExamplesInput, trainExamplesOutput);
 		bp.startTrain();
 
@@ -83,7 +83,7 @@ public class LCDDTest implements BpInterface {
 	 */
 	@Override
 	public double changeRate(double cost, double oldRate) {
-		if (cost < 0.0673) {// origin:0.06729
+		if (cost < 0.0001) {// origin:0.06729
 			return -1;
 		}
 		if (cost < 0.08) {

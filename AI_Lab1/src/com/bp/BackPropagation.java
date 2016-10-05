@@ -104,8 +104,18 @@ public class BackPropagation {
 		double[] delta2 = dotMulti(matrixMultiVec(transpose(Theta2_1), delta3), 
 				dotMulti(hidden, numSubVec(1, hidden)));
 		
-		deltaTheta2 = vecMulVec(delta3, hidden, rate);	
-		deltaTheta1 = vecMulVec(delta2, input, rate);
+		double[][] deltaTheta2_temp = vecMulVec(delta3, hidden);	
+		double[][] deltaTheta1_temp = vecMulVec(delta2, input);
+		for (int i = 0; i < deltaTheta2_temp.length; i++) {
+			for (int j = 0; j < deltaTheta2_temp[0].length; j++) {
+				deltaTheta2[i][j] = deltaTheta2_temp[i][j];
+			}
+		}
+		for (int i = 0; i < deltaTheta1_temp.length; i++) {
+			for (int j = 0; j < deltaTheta1_temp[0].length; j++) {
+				deltaTheta1[i][j] = deltaTheta1_temp[i][j];
+			}
+		}
 	}
 
 	/**
@@ -191,7 +201,7 @@ public class BackPropagation {
 			for (int j = 0; j < Theta2.length; j++) {
 				for (int j2 = 0; j2 < Theta2[0].length; j2++) {
 					if (j2 != 0) {
-						totalDeltaTheta2[j][j2] -= lambda*Theta2[j][j2];
+						totalDeltaTheta2[j][j2] += lambda*Theta2[j][j2];
 					}
 					cost2 += lambda*Theta2[j][j2]*Theta2[j][j2];
 				}
@@ -199,12 +209,12 @@ public class BackPropagation {
 			for (int j = 0; j < Theta1.length; j++) {
 				for (int j2 = 0; j2 < Theta1[0].length; j2++) {
 					if (j2 != 0) {
-						totalDeltaTheta1[j][j2] -= lambda*Theta1[j][j2];
+						totalDeltaTheta1[j][j2] += lambda*Theta1[j][j2];
 					}
 					cost1 += lambda*Theta1[j][j2]*Theta1[j][j2];
 				}
 			}
-			cost = (cost + cost1 + cost2) / numOfExam / 2;
+			cost = cost / numOfExam + (cost1 + cost2) / numOfExam /2;
 			showIterationCost(iteration, cost, rate);
 			rate = bpCtrl.changeRate(cost, rate);
 			//达到要求时，则停止调整参数
@@ -226,14 +236,12 @@ public class BackPropagation {
 	private void updateTheta(double[][] totalDeltaTheta1, double[][] totalDeltaTheta2) {
 		for (int k = 0; k < totalDeltaTheta2.length; k++) {
 			for (int j = 0; j < totalDeltaTheta2[0].length; j++) {
-				Theta2[k][j] += totalDeltaTheta2[k][j]/numOfExam
-						- lambda*Theta2[k][j];
+				Theta2[k][j] -= rate*totalDeltaTheta2[k][j]/numOfExam;
 			}
 		}
 		for (int k = 0; k < totalDeltaTheta1.length; k++) {
 			for (int j = 0; j < totalDeltaTheta1[0].length; j++) {
-				Theta1[k][j] += totalDeltaTheta1[k][j]/numOfExam
-						- lambda*Theta1[k][j];
+				Theta1[k][j] -= rate*totalDeltaTheta1[k][j]/numOfExam;
 			}
 		}
 		totalDeltaTheta1 = new double[Theta1.length][Theta1[0].length];
@@ -292,7 +300,7 @@ public class BackPropagation {
 				cost1 += lambda*Theta1[j][j2]*Theta1[j][j2];
 			}
 		}
-		error = (error + cost1 + cost2) / numOfExam / 2;
+		error = error/numOfExam + (cost1 + cost2) / numOfExam / 2;
 		return error;
 	}
 	/**
@@ -303,9 +311,12 @@ public class BackPropagation {
 	private double getOneExampleCost(double[] desiredOutput) {
 		double err = 0;
 		for (int j = 0; j < outputLayerSize; j++) {
-			// get error
-			double error = desiredOutput[j] - output[j];
-			err += error*error;
+//			// get error
+//			double error = desiredOutput[j] - output[j];
+//			err += error*error;
+			double y = desiredOutput[j];
+			double o = output[j];
+			err += -y*Math.log(o)-(1-y)*Math.log(1-o);
 		}
 		return err;
 	}
