@@ -201,7 +201,7 @@ public class BackPropagation {
 			for (int j = 0; j < Theta2.length; j++) {
 				for (int j2 = 0; j2 < Theta2[0].length; j2++) {
 					if (j2 != 0) {
-						totalDeltaTheta2[j][j2] += lambda*Theta2[j][j2];
+						totalDeltaTheta2[j][j2] += lambda*numOfExam*Theta2[j][j2];
 					}
 					cost2 += lambda*Theta2[j][j2]*Theta2[j][j2];
 				}
@@ -209,12 +209,12 @@ public class BackPropagation {
 			for (int j = 0; j < Theta1.length; j++) {
 				for (int j2 = 0; j2 < Theta1[0].length; j2++) {
 					if (j2 != 0) {
-						totalDeltaTheta1[j][j2] += lambda*Theta1[j][j2];
+						totalDeltaTheta1[j][j2] += lambda*numOfExam*Theta1[j][j2];
 					}
 					cost1 += lambda*Theta1[j][j2]*Theta1[j][j2];
 				}
 			}
-			cost = cost / numOfExam + (cost1 + cost2) / numOfExam /2;
+			cost = cost / numOfExam + (cost1 + cost2)/2;
 			showIterationCost(iteration, cost, rate);
 			rate = bpCtrl.changeRate(cost, rate);
 			//达到要求时，则停止调整参数

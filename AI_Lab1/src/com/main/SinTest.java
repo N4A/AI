@@ -39,7 +39,7 @@ public class SinTest implements BpInterface {
 		}
 		BpInterface bpCtrl = new SinTest();
 		BackPropagation bp = new BackPropagation(inputSize, 20, outputSize, 0.1, 
-				50000, 0.0003, bpCtrl);
+				50000, 0.01, bpCtrl);
 		bp.setTrainExamples(trainExamplesInput, trainExamplesOutput);
 		bp.startTrain();
 
