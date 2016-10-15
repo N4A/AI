@@ -47,7 +47,7 @@ public class CharacterTest implements BpInterface{
 		}
 		fReader.close();
 		BackPropagation bp = new BackPropagation(inputSize, 25, outputSize, 0.3,
-				50, 0.01, bpCtrl);
+				100, 0.01, bpCtrl);
 		bp.setTrainExamples(trainExamplesInput, trainExamplesOutput);
 		bp.startTrain();
 		
@@ -102,18 +102,13 @@ public class CharacterTest implements BpInterface{
 	
 	@Override
 	public double changeRate(double cost, double oldRate) {
-		if (cost < 2.5){//origin:
+		if (cost < 2.8){//origin:
 			return -1;
 		}
 		else if (cost < 3) {
 			return 0.1;
 		}
-		else if (cost < 4.4) {
-			return 0.1;
-		}
-		else if (cost < 0.3193362) {
-			return 0.001;
-		}
+
 		return oldRate;//+(Math.random()-0.5)*oldRate*0.0001;
 	}
 	
@@ -151,7 +146,7 @@ public class CharacterTest implements BpInterface{
 	
 	@Override
 	public String getPath() {
-		return "testbp/weightOfCharacter.txt";
+		return "testbp/weightOfCharacter2.txt";
 	}
 	
 	private static int getMax(double[] output) {
