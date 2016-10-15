@@ -1,4 +1,4 @@
-
+# CNN code
 
 ```python
 ###########################################
@@ -175,6 +175,7 @@ print("test accuracy %g"% test_accuracy)
 np.savez('weigths2.npz',W_conv1.eval(),b_conv1.eval(),W_conv2.eval(),b_conv2.eval(),W_fc1.eval(),b_fc1.eval(),W_fc2.eval(),b_fc2.eval())
 ```
 
+# train output
     Exception AssertionError: AssertionError() in <bound method InteractiveSession.__del__ of <tensorflow.python.client.session.InteractiveSession object at 0x7f1baf358190>> ignored
 
 
