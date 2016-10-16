@@ -311,7 +311,7 @@ public class BackPropagation {
 	private double getOneExampleCost(double[] desiredOutput) {
 		double err = 0;
 		for (int j = 0; j < outputLayerSize; j++) {
-//			// get error
+			// get error
 //			double error = desiredOutput[j] - output[j];
 //			err += error*error;
 			double y = desiredOutput[j];
@@ -365,28 +365,3 @@ public class BackPropagation {
 		System.out.println("Iteration:\t" + iteration + "|Cost:\t" + cost + "|rate:\t" + rate);
 	}
 }
-//if (i % update == update-1) {// 每 update个单位更新weights
-//// update Theta1 and Theta2
-//for (int k = 0; k < totalDeltaTheta2.length; k++) {
-//	for (int j = 0; j < totalDeltaTheta2[0].length; j++) {
-//		Theta2[k][j] += totalDeltaTheta2[k][j];
-//	}
-//}
-//for (int k = 0; k < totalDeltaTheta1.length; k++) {
-//	for (int j = 0; j < totalDeltaTheta1[0].length; j++) {
-//		Theta1[k][j] += totalDeltaTheta1[k][j];
-//	}
-//}
-//totalDeltaTheta1 = new double[Theta1.length][Theta1[0].length];
-//totalDeltaTheta2 = new double[Theta2.length][Theta2[0].length];
-//
-//iteration++;
-//cost = costFunction();
-//showIterationCost(iteration, cost, rate);
-//// change cost and decide whether to stop iterations
-//rateTemp = bpCtrl.changeRate(cost, rate);
-//if (rateTemp == -1)
-//	break;
-//else
-//	rate = rateTemp;
-//}
