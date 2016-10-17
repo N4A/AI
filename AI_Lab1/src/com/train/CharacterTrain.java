@@ -46,8 +46,8 @@ public class CharacterTrain implements BpInterface{
 			}
 		}
 		fReader.close();
-		BackPropagation bp = new BackPropagation(inputSize, 25, outputSize, 0.3,
-				100, 0.01, bpCtrl);
+		BackPropagation bp = new BackPropagation(inputSize, 25, outputSize, 0.001,
+				0, 0.01, bpCtrl);
 		bp.setTrainExamples(trainExamplesInput, trainExamplesOutput);
 		bp.startTrain();
 		
@@ -102,13 +102,9 @@ public class CharacterTrain implements BpInterface{
 	
 	@Override
 	public double changeRate(double cost, double oldRate) {
-		if (cost < 2.8){//origin:
+		if (cost < 1){//origin:
 			return -1;
 		}
-		else if (cost < 3) {
-			return 0.1;
-		}
-
 		return oldRate;//+(Math.random()-0.5)*oldRate*0.0001;
 	}
 	

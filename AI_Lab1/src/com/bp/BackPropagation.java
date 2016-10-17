@@ -179,6 +179,9 @@ public class BackPropagation {
 			// get delta_weights
 			double[][] totalDeltaTheta1 = new double[Theta1.length][Theta1[0].length];
 			double[][] totalDeltaTheta2 = new double[Theta2.length][Theta2[0].length];
+			Batch batch = new Batch(50);
+			double[][] trainExamplesInput = batch.input;
+			double[][] trainExamplesOutput = batch.output;
 			int i = 0;
 			for (; i < numOfExam; i++) {
 				//forward propagation
@@ -363,5 +366,38 @@ public class BackPropagation {
 	 */
 	private void showIterationCost(int iteration, double cost, double rate) {
 		System.out.println("Iteration:\t" + iteration + "|Cost:\t" + cost + "|rate:\t" + rate);
+	}
+	
+	
+	/**
+	 * mini-batch
+	 */
+	private int offset = 0;
+	class Batch {
+		public double[][] input;
+		public double[][] output;
+		
+		public Batch(int size) {
+			if (offset + size <= trainExamplesInput.length) {
+				input = new double[size][inputLayerSize];
+				output = new double[size][outputLayerSize];
+				for (int i = 0; i < size; i++) {
+					input[i] = trainExamplesInput[offset+i];
+					output[i] = trainExamplesOutput[offset+i];
+				}
+				offset+=size;
+			}
+			else {
+				size = trainExamplesInput.length - offset;
+				input = new double[size][inputLayerSize];
+				output = new double[size][outputLayerSize];
+				for (int i = 0; i < size; i++) {
+					input[i] = trainExamplesInput[offset+i];
+					output[i] = trainExamplesOutput[offset+i];
+				}
+				offset = 0;
+			}
+			numOfExam = size;
+		}
 	}
 }
