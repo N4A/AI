@@ -15,8 +15,8 @@ import com.bp.BpInterface;
 
 /**
  * @author duocai
- * @time ÏÂÎç8:43:27
- * @date 2016Äê10ÔÂ16ÈÕ
+ * @time ï¿½ï¿½ï¿½ï¿½8:43:27
+ * @date 2016ï¿½ï¿½10ï¿½ï¿½16ï¿½ï¿½
  */
 public class LCDDTest implements BpInterface {
 	final static int outputSize = 10;
@@ -51,7 +51,7 @@ public class LCDDTest implements BpInterface {
 	}
 	
 	/**
-	 * ×Ô¾ö¶¨³õÊ¼²ÎÊý,Ñ¡ÔñÑµÁ·ºÃµÄ²ÎÊý
+	 * ï¿½Ô¾ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½,Ñ¡ï¿½ï¿½Ñµï¿½ï¿½ï¿½ÃµÄ²ï¿½ï¿½ï¿½
 	 * 
 	 * @param Theta1
 	 * @param Theta2
@@ -59,7 +59,7 @@ public class LCDDTest implements BpInterface {
 	 */
 	@Override
 	public void decideWeights(double[][] Theta1, double[][] Theta2) throws IOException {
-		File file = new File("testbp/weightOfSin.txt");
+		File file = new File("testbp/weightOfLCDD.txt");
 		@SuppressWarnings("resource")
 		BufferedReader fReader = new BufferedReader(new FileReader(file));
 		if (fReader.ready()) {

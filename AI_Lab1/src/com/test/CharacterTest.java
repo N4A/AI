@@ -15,8 +15,8 @@ import com.bp.BpInterface;
 
 /**
  * @author duocai
- * @time ÏÂÎç8:25:52
- * @date 2016Äê10ÔÂ16ÈÕ
+ * @time ï¿½ï¿½ï¿½ï¿½8:25:52
+ * @date 2016ï¿½ï¿½10ï¿½ï¿½16ï¿½ï¿½
  */
 public class CharacterTest implements BpInterface {
 	final static int outputSize = 8;
@@ -32,7 +32,7 @@ public class CharacterTest implements BpInterface {
 				100, 0.01, bpCtrl);
 		
 		//test
-		File test = new File("testbp/letter.txt");
+		File test = new File("testbp/letterBp.txt");
 		File output = new File("LetterBP14302010040.txt");
 		BufferedReader tReader = new BufferedReader(new FileReader(test));
 		BufferedWriter bWriter = new BufferedWriter(new FileWriter(output));
@@ -53,7 +53,7 @@ public class CharacterTest implements BpInterface {
 	}
 	
 	/**
-	 * ×Ô¾ö¶¨³õÊ¼²ÎÊý,Ñ¡ÔñÑµÁ·ºÃµÄ²ÎÊý
+	 * ï¿½Ô¾ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½,Ñ¡ï¿½ï¿½Ñµï¿½ï¿½ï¿½ÃµÄ²ï¿½ï¿½ï¿½
 	 * @param Theta1
 	 * @param Theta2
 	 * @throws IOException 

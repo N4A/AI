@@ -14,8 +14,8 @@ import javax.imageio.ImageIO;
 
 /**
  * @author duocai
- * @time ÏÂÎç7:58:25
- * @date 2016Äê10ÔÂ16ÈÕ
+ * @time ï¿½ï¿½ï¿½ï¿½7:58:25
+ * @date 2016ï¿½ï¿½10ï¿½ï¿½16ï¿½ï¿½
  */
 public class ProduceTestFormat {
 	private OutputStreamWriter osw;
@@ -27,34 +27,37 @@ public class ProduceTestFormat {
 	public static void main(String[] args) throws Exception {
 		ProduceTestFormat pFormat = new ProduceTestFormat();
 		pFormat.initOutputPath();
-		String inPath = "testletter";
+		String inPath = "testletter/testletterCNN";
 		pFormat.writeGrey(inPath);
 		pFormat.osw.close();
 		System.out.println("finished.");
 	}
 	
 	/**
-	 * ³õÊ¼»¯ÑµÁ·¼¯Êä³öÂ·¾¶
+	 * ï¿½ï¿½Ê¼ï¿½ï¿½Ñµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
 	 * @throws UnsupportedEncodingException
 	 * @throws FileNotFoundException
 	 */
 	private  void initOutputPath() throws UnsupportedEncodingException, FileNotFoundException {
-		String outputFilePath = "testbp/letter.txt";
+		String outputFilePath = "testbp/letterCnn.txt";
 		File outputFile = new File(outputFilePath);
 		FileOutputStream fos = new FileOutputStream(outputFile);
 		osw = new OutputStreamWriter(fos, "UTF-8");
 	}
 	
-	// ¸Ã·½·¨¶ÁÈëÒ»¸öÎÄ¼þ¼Ð£¬ÎÄ¼þ¼ÐÃûÎª×ÖÄ¸£¬¶ÔÎÄ¼þ¼ÐÖÐµÄÃ¿¸öÍ¼Æ¬ÎÄ¼þ×ª³É»Ò¶ÈÖµÐ´ÈëÎÄ±¾ÎÄ¼þ
+	// ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ð£ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ã¿ï¿½ï¿½Í¼Æ¬ï¿½Ä¼ï¿½×ªï¿½É»Ò¶ï¿½ÖµÐ´ï¿½ï¿½ï¿½Ä±ï¿½ï¿½Ä¼ï¿½
 	public void writeGrey(String directoryPath) throws Exception {
-		File directory = new File(directoryPath);
-		File[] imageFiles = directory.listFiles();
-		for (File imageFile : imageFiles) {
-			writeGrey(imageFile, directoryPath);
+//		//File directory = new File(directoryPath);
+//		//File[] imageFiles = directory.listFiles();
+//		for (File imageFile : imageFiles) {
+//			writeGrey(imageFile, directoryPath);
+//		}
+		for (int i = 1; i< 4001; i++) {
+			writeGrey(new File(directoryPath + "/" + i +".png"), directoryPath);
 		}
 	}
 	
-	// ÎÄ¼þÃûºó×ºÎª.png£¬¸Ã·½·¨¶ÁÈëÍ¼Æ¬ÎÄ¼þ£¬½«»Ò¶ÈÖµÐ´ÈëÎÄ±¾ÎÄ¼þ
+	// ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½×ºÎª.pngï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò¶ï¿½ÖµÐ´ï¿½ï¿½ï¿½Ä±ï¿½ï¿½Ä¼ï¿½
 	public void writeGrey(File file, String directoryPath) throws Exception {
 		String filePath = file.getPath();
 		File imageFile = new File(filePath);

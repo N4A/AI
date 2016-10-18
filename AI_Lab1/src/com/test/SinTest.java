@@ -15,8 +15,8 @@ import com.bp.BpInterface;
 
 /**
  * @author duocai
- * @time ÏÂÎç8:56:25
- * @date 2016Äê10ÔÂ16ÈÕ
+ * @time ï¿½ï¿½ï¿½ï¿½8:56:25
+ * @date 2016ï¿½ï¿½10ï¿½ï¿½16ï¿½ï¿½
  */
 public class SinTest implements BpInterface {
 
@@ -27,7 +27,7 @@ public class SinTest implements BpInterface {
 	 */
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		int inputSize = 1;
-		LCDDTest bpCtrl = new LCDDTest();
+		SinTest bpCtrl = new SinTest();
 		BackPropagation bp = new BackPropagation(inputSize, 20, 
 				1, 0.3, 50000, 0, bpCtrl);
 		File file = new File("testbp/sine.txt");
@@ -42,6 +42,7 @@ public class SinTest implements BpInterface {
 			double result = bp.test(test)[0];
 			result = num >= 0 ? result : -result;
 			bWriter.write(result + "\r\n");
+			System.out.println(result + "/" +Math.sin(num));
 		}
 		fReader.close();
 		bWriter.close();
@@ -49,7 +50,7 @@ public class SinTest implements BpInterface {
 	}
 
 	/**
-	 * ×Ô¾ö¶¨³õÊ¼²ÎÊý,Ñ¡ÔñÑµÁ·ºÃµÄ²ÎÊý
+	 * ï¿½Ô¾ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½,Ñ¡ï¿½ï¿½Ñµï¿½ï¿½ï¿½ÃµÄ²ï¿½ï¿½ï¿½
 	 * 
 	 * @param Theta1
 	 * @param Theta2
