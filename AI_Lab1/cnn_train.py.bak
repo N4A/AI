@@ -41,7 +41,6 @@ size_fc1 = 1024 # similar like hidden layer size
 
 # dropout
 dropout_p = 0.38
-# dropout2_p = 0.4
 
 # output layer size
 output_size = 8
