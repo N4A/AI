@@ -46,8 +46,8 @@ public class CharacterTrain implements BpInterface{
 			}
 		}
 		fReader.close();
-		BackPropagation bp = new BackPropagation(inputSize, 25, outputSize, 0.0001,
-				10000, 0.01, bpCtrl);
+		BackPropagation bp = new BackPropagation(inputSize, 25, outputSize, 0.001,
+				10000, 0.1, bpCtrl);
 		bp.setTrainExamples(trainExamplesInput, trainExamplesOutput);
 		bp.startTrain();
 		
