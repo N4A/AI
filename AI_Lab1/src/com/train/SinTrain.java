@@ -38,8 +38,8 @@ public class SinTrain implements BpInterface {
 			base += step;
 		}
 		BpInterface bpCtrl = new SinTrain();
-		BackPropagation bp = new BackPropagation(inputSize, 20, outputSize, 0.1, 
-				5000, 0.00000000001, bpCtrl);
+		BackPropagation bp = new BackPropagation(inputSize, 20, outputSize, 0.01, 
+				10000, 0.00000000001, bpCtrl);
 		bp.setTrainExamples(trainExamplesInput, trainExamplesOutput);
 		bp.startTrain();
 
@@ -62,21 +62,27 @@ public class SinTrain implements BpInterface {
 	}
 	
 	/**
-	 * ÖÆ¶¨¸Ä±äcostµÄº¯Êý
+	 * ï¿½Æ¶ï¿½ï¿½Ä±ï¿½costï¿½Äºï¿½ï¿½ï¿½
 	 * 
 	 * @param origin
 	 * @return
 	 */
 	@Override
 	public double changeRate(double cost, double oldRate) {
-		if (cost < 0.000072) {
+		if (cost < 0.0000719503) {
 			return -1;
+		}
+		else if (cost < 0.00007195033) {
+			return 0.00001;
+		}
+		else if (cost < 0.000072) {
+			return 0.001;
 		}
 		return oldRate;
 	}
 	
 	/**
-	 * ×Ô¾ö¶¨³õÊ¼²ÎÊý,Ñ¡ÔñÑµÁ·ºÃµÄ²ÎÊý
+	 * ï¿½Ô¾ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½,Ñ¡ï¿½ï¿½Ñµï¿½ï¿½ï¿½ÃµÄ²ï¿½ï¿½ï¿½
 	 * 
 	 * @param Theta1
 	 * @param Theta2

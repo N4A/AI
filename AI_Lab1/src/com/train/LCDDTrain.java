@@ -47,20 +47,21 @@ public class LCDDTrain implements BpInterface {
 			}
 		}
 
-		BackPropagation bp = new BackPropagation(inputSize, 18, outputSize, 0.3, 50000, 0, lcddTest);
+		BackPropagation bp = new BackPropagation(inputSize, 18, outputSize, 0.3,
+				50000, 0, lcddTest);
 		bp.setTrainExamples(trainExamplesInput, trainExamplesOutput);
 		bp.startTrain();
 
 		System.out.println("test:0123456789");
-		System.out.println((getMax(bp.test(new double[] { 1, 1, 1, 1, 1, 1, 0 })) + 1) % 10);
-		System.out.println(getMax(bp.test(new double[] { 0, 0, 0, 1, 1, 0, 0 })) + 1);
-		System.out.println(getMax(bp.test(new double[] { 1, 0, 1, 1, 0, 1, 1 })) + 1);
-		System.out.println(getMax(bp.test(new double[] { 0, 0, 1, 1, 1, 1, 1 })) + 1);
-		System.out.println(getMax(bp.test(new double[] { 0, 1, 0, 1, 1, 0, 1 })) + 1);
-		System.out.println(getMax(bp.test(new double[] { 0, 1, 1, 0, 1, 1, 1 })) + 1);
-		System.out.println(getMax(bp.test(new double[] { 1, 1, 1, 0, 1, 1, 1 })) + 1);
-		System.out.println(getMax(bp.test(new double[] { 0, 0, 1, 1, 1, 0, 0 })) + 1);
-		System.out.println(getMax(bp.test(new double[] { 1, 1, 1, 1, 1, 1, 1 })) + 1);
+		System.out.print((getMax(bp.test(new double[] { 1, 1, 1, 1, 1, 1, 0 })) + 1) % 10);
+		System.out.print(getMax(bp.test(new double[] { 0, 0, 0, 1, 1, 0, 0 })) + 1);
+		System.out.print(getMax(bp.test(new double[] { 1, 0, 1, 1, 0, 1, 1 })) + 1);
+		System.out.print(getMax(bp.test(new double[] { 0, 0, 1, 1, 1, 1, 1 })) + 1);
+		System.out.print(getMax(bp.test(new double[] { 0, 1, 0, 1, 1, 0, 1 })) + 1);
+		System.out.print(getMax(bp.test(new double[] { 0, 1, 1, 0, 1, 1, 1 })) + 1);
+		System.out.print(getMax(bp.test(new double[] { 1, 1, 1, 0, 1, 1, 1 })) + 1);
+		System.out.print(getMax(bp.test(new double[] { 0, 0, 1, 1, 1, 0, 0 })) + 1);
+		System.out.print(getMax(bp.test(new double[] { 1, 1, 1, 1, 1, 1, 1 })) + 1);
 		System.out.println(getMax(bp.test(new double[] { 0, 1, 1, 1, 1, 1, 1 })) + 1);
 
 		while (true) {
@@ -76,7 +77,7 @@ public class LCDDTrain implements BpInterface {
 	}
 
 	/**
-	 * ÖÆ¶¨¸Ä±äcostµÄº¯Êý
+	 * ï¿½Æ¶ï¿½ï¿½Ä±ï¿½costï¿½Äºï¿½ï¿½ï¿½
 	 * 
 	 * @param origin
 	 * @return
@@ -84,7 +85,7 @@ public class LCDDTrain implements BpInterface {
 	@Override
 	public double changeRate(double cost, double oldRate) {
 		if (cost < 0.0001) {// origin:0.06729
-			return -1;
+			return -1;//è¡¨ç¤ºç»“æŸè®­ç»ƒ
 		}
 		if (cost < 0.08) {
 			return 0.0001;
@@ -99,7 +100,7 @@ public class LCDDTrain implements BpInterface {
 	}
 
 	/**
-	 * ×Ô¾ö¶¨³õÊ¼²ÎÊý,Ñ¡ÔñÑµÁ·ºÃµÄ²ÎÊý
+	 * ï¿½Ô¾ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½,Ñ¡ï¿½ï¿½Ñµï¿½ï¿½ï¿½ÃµÄ²ï¿½ï¿½ï¿½
 	 * 
 	 * @param Theta1
 	 * @param Theta2

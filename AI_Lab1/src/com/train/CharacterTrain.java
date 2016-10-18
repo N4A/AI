@@ -46,8 +46,8 @@ public class CharacterTrain implements BpInterface{
 			}
 		}
 		fReader.close();
-		BackPropagation bp = new BackPropagation(inputSize, 25, outputSize, 0.001,
-				0, 0.01, bpCtrl);
+		BackPropagation bp = new BackPropagation(inputSize, 25, outputSize, 0.0001,
+				10000, 0.01, bpCtrl);
 		bp.setTrainExamples(trainExamplesInput, trainExamplesOutput);
 		bp.startTrain();
 		
@@ -67,7 +67,7 @@ public class CharacterTrain implements BpInterface{
 			//get output and change to vector
 			char result = (char) ('A' + getMax(bp.test(testExamples)));
 			char ans = tokens[tokens.length-1].charAt(0);
-			System.out.println("output:"+result+"|answer:"+ans);
+			//System.out.println("output:"+result+"|answer:"+ans);
 			if (ans == result) {
 				right += 1;
 			}
@@ -90,7 +90,7 @@ public class CharacterTrain implements BpInterface{
 			//get output and change to vector
 			char result = (char) ('A' + getMax(bp.test(testExamples)));
 			char ans = tokens[tokens.length-1].charAt(0);
-			System.out.println("output:"+result+"|answer:"+ans);
+			//System.out.println("output:"+result+"|answer:"+ans);
 			if (ans == result) {
 				right += 1;
 			}
@@ -109,7 +109,7 @@ public class CharacterTrain implements BpInterface{
 	}
 	
 	/**
-	 * ×Ô¾ö¶¨³õÊ¼²ÎÊý,Ñ¡ÔñÑµÁ·ºÃµÄ²ÎÊý
+	 * ï¿½Ô¾ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½,Ñ¡ï¿½ï¿½Ñµï¿½ï¿½ï¿½ÃµÄ²ï¿½ï¿½ï¿½
 	 * @param Theta1
 	 * @param Theta2
 	 * @throws IOException 

@@ -34,7 +34,7 @@ public class BackPropagation {
 
 	private BpInterface bpCtrl;
 	
-	//²ÎÊý
+	//ï¿½ï¿½ï¿½ï¿½
 	private double[] hidden;
 	private double[] output;
 	
@@ -75,8 +75,8 @@ public class BackPropagation {
 	}
 	
 	/**
-	 * ÏòÇ°´«²¥£¬Ëã³ö½á¹û
-	 * @input - Ä³¸ö²âÊÔÑùßÖ
+	 * ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	 * @input - Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private void forwardPropagation(double[] input){
 		// forward propagation
@@ -91,7 +91,7 @@ public class BackPropagation {
 	}
 	
 	/**
-	 * ·´Ïò´«²¥£¬Ëã³ö²ÎÊýÎó²î
+	 * ï¿½ï¿½ï¿½ò´«²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * @param deltaTheta1
 	 * @param deltaTheta2
 	 * @param desiredOutput
@@ -99,6 +99,8 @@ public class BackPropagation {
 	 */
 	private void backPropagation(double[][] deltaTheta1, double[][] deltaTheta2, double[] desiredOutput, double[] input) {
 		double[] delta3 = vecSubVec(output, desiredOutput);
+		//delta3 = dotMulti(delta3, dotMulti(output, numSubVec(1, output)));//for square error loss function
+		
 		//delta2 = Theta2_O'*delta3.*sigmoidGradient(z2);
 		double[][] Theta2_1 = rmFirstColumn(Theta2);
 		double[] delta2 = dotMulti(matrixMultiVec(transpose(Theta2_1), delta3), 
@@ -175,7 +177,7 @@ public class BackPropagation {
 	public void startTrain() {
 		int iteration = 0;
 		while (iteration < iterationMax) {	
-			double cost = 0;//Ã¿´Îµü´úÖØÐÂ¼ÆËãcost
+			double cost = 0;//Ã¿ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½cost
 			// get delta_weights
 			double[][] totalDeltaTheta1 = new double[Theta1.length][Theta1[0].length];
 			double[][] totalDeltaTheta2 = new double[Theta2.length][Theta2[0].length];
@@ -198,7 +200,7 @@ public class BackPropagation {
 				Add(totalDeltaTheta2, deltaTheta2);
 				Add(totalDeltaTheta1, deltaTheta1);
 			}
-			//ÕýÔò»¯,²¢¼ÆËãcostÕýÔòÏî
+			//ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½costï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			double cost1 = 0;
 			double cost2 = 0;
 			for (int j = 0; j < Theta2.length; j++) {
@@ -220,7 +222,7 @@ public class BackPropagation {
 			cost = cost / numOfExam + (cost1 + cost2)/2;
 			showIterationCost(iteration, cost, rate);
 			rate = bpCtrl.changeRate(cost, rate);
-			//´ïµ½ÒªÇóÊ±£¬ÔòÍ£Ö¹µ÷Õû²ÎÊý
+			//ï¿½ïµ½Òªï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Í£Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			if (rate == -1) {
 				printWeight(bpCtrl.getPath());
 				break;
@@ -232,7 +234,7 @@ public class BackPropagation {
 	}
 	
 	/**
-	 * ¸üÐÂ²ÎÊý
+	 * ï¿½ï¿½ï¿½Â²ï¿½ï¿½ï¿½
 	 * @param totalDeltaTheta1
 	 * @param totalDeltaTheta2
 	 */
@@ -252,7 +254,7 @@ public class BackPropagation {
 	}
 
 	/**
-	 * Êä³öÑµÁ·ºÃµÄÈ¨ÖØ
+	 * ï¿½ï¿½ï¿½Ñµï¿½ï¿½ï¿½Ãµï¿½È¨ï¿½ï¿½
 	 * @param path
 	 */
 	private void printWeight(String path) {
@@ -307,7 +309,7 @@ public class BackPropagation {
 		return error;
 	}
 	/**
-	 * µÃµ½Ò»¸öÑù±¾µÄÎó²î
+	 * ï¿½Ãµï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * @param desiredOutput
 	 * @return
 	 */
@@ -385,7 +387,7 @@ public class BackPropagation {
 					input[i] = trainExamplesInput[offset+i];
 					output[i] = trainExamplesOutput[offset+i];
 				}
-				offset+=size;
+				offset= (offset+size)%trainExamplesInput.length;
 			}
 			else {
 				size = trainExamplesInput.length - offset;
