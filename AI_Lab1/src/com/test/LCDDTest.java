@@ -42,7 +42,7 @@ public class LCDDTest implements BpInterface {
 				test[j] = Double.parseDouble(tokens[j]);
 			}
 			int result = getMax(bp.test(test));
-			bWriter.write(result + "\r\n");
+			bWriter.write((result+1)%10 + "\r\n");
 		}
 		fReader.close();
 		bWriter.close();
