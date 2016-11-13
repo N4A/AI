@@ -6,29 +6,6 @@
 %So,define state templete: 
 %state(Ship,Police,Criminal,Father,Mother,Son1,Son2,Daughter1,Daughter2)/9
 
-%the end rule
-path(state(Shi,Pol,Cri,Fat,Mot,Son1,Son2,Dau1,Dau2),
-	state(Shi,Pol,Cri,Fat,Mot,Son1,Son2,Dau1,Dau2),List):-
-	1=1,
-	print(List).
-
-%the recursion path rule
-path(state(Shi,Pol,Cri,Fat,Mot,Son1,Son2,Dau1,Dau2),
-	state(Shi_g,Pol_g,Cri_g,Fat_g,Mot_g,Son1_g,Son2_g,Dau1_g,Dau2_g),List):-
-	% not get end
-	(Shi \= Shi_g;Pol \= Pol_g;Cri \= Cri_g,Fat \= Fat_g;
-	Mot \= Mot_g;Son1 \= Son1_g;Son2 \= Son2_g;Dau1 \= Dau1_g;Dau2 \= Dau2_g),
-	% get next possible state
-	move(state(Shi,Pol,Cri,Fat,Mot,Son1,Son2,Dau1,Dau2),
-		state(Shi_n,Pol_n,Cri_n,Fat_n,Mot_n,Son1_n,Son2_n,Dau1_n,Dau2_n)),
-	% not already in the list
-	not(member(state(Shi_n,Pol_n,Cri_n,Fat_n,Mot_n,Son1_n,Son2_n,Dau1_n,Dau2_n),List)),
-	% add to the list
-	member(state(Shi_n,Pol_n,Cri_n,Fat_n,Mot_n,Son1_n,Son2_n,Dau1_n,Dau2_n),[New|List]),
-	% recurion for answer.
-	path(state(Shi_n,Pol_n,Cri_n,Fat_n,Mot_n,Son1_n,Son2_n,Dau1_n,Dau2_n),
-		state(Shi_g,Pol_g,Cri_g,Fat_g,Mot_g,Son1_g,Son2_g,Dau1_g,Dau2_g),[New|List]).
-
 % the police crosses the river with the criminal.
 move(state(X,X,X,Fat,Mot,Son1,Son2,Dau1,Dau2),state(Y,Y,Y,Fat,Mot,Son1,Son2,Dau1,Dau2)):-
 	opposite(X,Y),not(unsafe(state(Y,Y,Y,Fat,Mot,Son1,Son2,Dau1,Dau2))).
@@ -103,11 +80,43 @@ unsafe(state(_,Pol,Cri,Fat,Mot,Son1,Son2,Dau1,Dau2)):-
 	%If the father is not with the mother, the mother will scold the sons.
 	(Fat \= Mot,(Mot = Son1;Mot = Son2)).
 
+%the end rule
+path(X,X,[]).%
+
+%the recursion path rule。 important！！！！
+%to implement something like BFS by using recursion and backtrace in prolog.
+%first, try wheter can get answer via 1 step.
+%next, try wheter can get answer via 2 step.
+%......
+%until find answer via n steps.
+%so, it must be the optimal answer.
+path(Now,Goal,List):-
+	%recurion for answer until get next state 
+	path(Now,Next,NewList),
+	not(member(Next,NewList)),
+	%require that the Next can change to Goal
+	%（not the final goal,but Next in previous path-invoking）.  
+	move(Next,Goal),
+	append(NewList,[Next],List).
+
 %make all eight people arrive safely on the other side of the river.
 %You should find the optimal way, i.e. the way with the minimum crossing times.
-go(state(Shi,Pol,Cri,Fat,Mot,Son1,Son2,Dau1,Dau2),
-	state(Shi_g,Pol_g,Cri_g,Fat_g,Mot_g,Son1_g,Son2_g,Dau1_g,Dau2_g)):-
-	List = [state(Shi,Pol,Cri,Fat,Mot,Son1,Son2,Dau1,Dau2)],
-	path(state(Shi,Pol,Cri,Fat,Mot,Son1,Son2,Dau1,Dau2),
-		state(Shi_g,Pol_g,Cri_g,Fat_g,Mot_g,Son1_g,Son2_g,Dau1_g,Dau2_g),List).
+go(Start,Goal):-
+	path(Start,Goal,List),
+	length(List,N),writeln(N-'steps.'),
+	append(List,[Goal],Answer),write([List,Answer]).
+	
 %go(state(w,w,w,w,w,w,w,w,w),state(e,e,e,e,e,e,e,e,e)).
+%answer:
+%17-steps.
+%[
+%state(w,w,w,w,w,w,w,w,w),state(e,e,e,w,w,w,w,w,w),
+%state(w,w,e,w,w,w,w,w,w),state(e,e,e,w,w,e,w,w,w),
+%state(w,w,w,w,w,e,w,w,w),state(e,w,w,e,w,e,e,w,w),
+%state(w,w,w,w,w,e,e,w,w),state(e,w,w,e,e,e,e,w,w),
+%state(w,w,w,e,w,e,e,w,w),state(e,e,e,e,w,e,e,w,w),
+%state(w,e,e,w,w,e,e,w,w),state(e,e,e,e,e,e,e,w,w),
+%state(w,e,e,e,w,e,e,w,w),state(e,e,e,e,e,e,e,e,w),
+%state(w,w,w,e,e,e,e,e,w),state(e,e,w,e,e,e,e,e,e),
+%state(w,w,w,e,e,e,e,e,e),state(e,e,e,e,e,e,e,e,e)
+%]

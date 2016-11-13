@@ -7,7 +7,7 @@
 %
 %Also，there is many message in this paragraph, and there is commen templete of the cars.
 %So, I use the same method as einstein_puzzle's.
-%templete: car(Owner,Brand,mpg)
+%templete: car(Owner,Brand,mpg)/3
 
 cars(C):- 
 	%init default message.
@@ -55,7 +55,8 @@ cars(C):-
 	
 %Question: What kind of car does each man drive and what gas mileage (mpg) does each car get?
 %Your answer should be in the following order: George, Doc, Tito, Jimmy.
-answer(C):-cars(C).
+answer():-cars(C),write(C).
 % cars(C).
 % answer:
-% C=[car(george, chevrolet, 25), car(doc, dodge, 10), car(tito, toyota, 20), car(jimmy, ford, 30)] ;
+% C=[car(george, chevrolet, 25), car(doc, dodge, 10), 
+%	 car(tito, toyota, 20), car(jimmy, ford, 30)] ;

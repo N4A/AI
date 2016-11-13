@@ -79,7 +79,7 @@ left(X,Y,H):-
 %X keep Y.
 keep(X,Y):- houses(H),member(house(_,X,_,_,Y),H).
 %get answer
-answer(X):- keep(X,fish).
+%answer():- keep(X,fish),write(X).
 
 %answer
 %the german keep fish.
