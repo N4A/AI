@@ -8,7 +8,7 @@
 %and then use the following message to fill the blank.
 %then, I can get five house full of message.
 
-%Templete: house(Color,People,Drink,Cigarette,Pet) and they should orderd in the list
+%Templete: house(Color,People,Drink,Cigarette,Pet)/5 and they should orderd in the list
 
 %all houses
 houses(H):-
