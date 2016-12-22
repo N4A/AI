@@ -25,7 +25,7 @@ public class Individual<T> {
 	public String toString() {
 		String str = "";
 		for (int i = 0; i < code.length; i++) {
-			str += code[i];
+			str += code[i] + " ";
 		}
 		return str;
 	}

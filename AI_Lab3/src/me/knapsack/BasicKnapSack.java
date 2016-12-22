@@ -45,8 +45,7 @@ public class BasicKnapSack implements IGeneticAssistant {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		
+		}	
 	}
 	/* (non-Javadoc)
 	 * @see me.genetic.IGeneticAssistant#randomInitIndividual()
@@ -56,7 +55,7 @@ public class BasicKnapSack implements IGeneticAssistant {
 		Byte[] code = new Byte[codeLen];
 		Random random = new Random();
 		for (int i = 0; i < code.length; i++) {
-			code[i] = (byte) (random.nextInt(1000)%2);//0 or 1
+			code[i] = (byte) (random.nextInt(2));//0 or 1
 		}
 		Individual<Byte> individual = new Individual<Byte>(code);
 		return individual;

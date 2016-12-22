@@ -1,4 +1,4 @@
-package me.knapsack;
+package me.tsp;
 
 import java.io.File;
 
@@ -15,30 +15,29 @@ import me.genetic.IGeneticAssistant;
  */
 public class Main {
 	public static void main(String[] args) {
-		double mutateP = 0.15;
-		double crossP = 0.75;
-		int scale = 1500;
-		int iterationMax = 10000;
+		double mutateP = 0.04;
+		double crossP = 0.12;
+		int scale = 5000;
+		int iterationMax = 18000;
 		
-		File dir = new File("testknapsack");
+		File dir = new File("testtsp");
 		File[] files = dir.listFiles();
 		for (int i = 0; i < files.length; i++) {
 			//IGeneticAssistant assistant = new KnapSack1();
-			IGeneticAssistant assistant = new BasicKnapSack();
-			((BasicKnapSack)assistant).init(files[i]);
+			IGeneticAssistant assistant = new BasicTSP();
+			((BasicTSP)assistant).init(files[i]);
 			
 			GeneralGeneticAlgorithm algorithm = 
 					new SequenceCross(iterationMax, scale,
 							assistant, crossP, mutateP);
-			//random cross
-			algorithm = 
-					new RandomCross(iterationMax, scale,
-							assistant, crossP, mutateP);
+//			algorithm = 
+//					new RandomCross(iterationMax, scale,
+//							assistant, crossP, mutateP);
 			
 			algorithm.start(true);
 			
 			System.out.print(algorithm.getBestGeneration()+":");
-			System.out.print(algorithm.getBestFitness()+",");
+			System.out.print(1/algorithm.getBestFitness()+",");
 			System.out.println(algorithm.getBestIndividual().toString());
 		}
 	}

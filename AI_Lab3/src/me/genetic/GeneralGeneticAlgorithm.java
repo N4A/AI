@@ -46,7 +46,7 @@ public abstract class GeneralGeneticAlgorithm {
 		bestFitness = Double.MIN_VALUE;//set fitness to minimal
 		curGeneration = 0;//first generation
 		//init the first species randomly
-		randomInitGeneration();
+		initGeneration();
 		
 		//iterate until reach the limit
 		for (int i = 0; i < iterationMax; i++) {
@@ -63,11 +63,13 @@ public abstract class GeneralGeneticAlgorithm {
 			
 			//print best individual
 			if (output) {
-				System.out.print("g: " + curGeneration);
-				System.out.print(",best: " + curGBestFitness);
-				System.out.print(",average: " + curGAverageFitness);
-				System.out.println(",best in total: "+ bestFitness);
-				
+				if (i%300 == 0) {
+					System.out.print("g: " + curGeneration);
+					System.out.print(",best: " + curGBestFitness);
+					System.out.print(",average: " + curGAverageFitness);
+					System.out.println(",best in total: "+ bestFitness);
+					
+				}
 			}
 		}
 		
@@ -182,8 +184,13 @@ public abstract class GeneralGeneticAlgorithm {
 		}
 	}
 	
-	//init the species randomly
-	private void randomInitGeneration() {
+	/**
+	 * decide how to initialize the first generation
+	 * default one is initialize it randomly
+	 * @date 2016年12月22日
+	 * @time 下午9:58:14
+	 */
+	public void initGeneration() {
 		species = new Individual[scale];
 		for (int i = 0; i < species.length; i++) {
 			species[i] = assistant.randomInitIndividual();
