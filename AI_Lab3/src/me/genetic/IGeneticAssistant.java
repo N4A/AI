@@ -14,7 +14,7 @@ public interface IGeneticAssistant {
 	 * @date 2016年12月21日
 	 * @time 下午3:10:26
 	 */
-	public Individual<?> randomInitIndividual();
+	public Individual<?> individualnitIndividual();
 	
 	/**
 	 * calculate the fitness of the 

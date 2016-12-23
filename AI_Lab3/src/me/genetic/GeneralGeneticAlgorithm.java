@@ -50,6 +50,8 @@ public abstract class GeneralGeneticAlgorithm {
 		
 		//iterate until reach the limit
 		for (int i = 0; i < iterationMax; i++) {
+			//evaluate fitness of each member of the species;
+			calculateFitness();
 			//select members from the species based on fitness
 			//produce the offspring of these pairs using genetic operators;
 			//and replace candidates of the species, with these offspring;
@@ -97,10 +99,7 @@ public abstract class GeneralGeneticAlgorithm {
 	}
 	
 	//calculate chosen rate
-	private double[] calculateRates() {
-		//evaluate fitness of each member of the species;
-		calculateFitness();
-		
+	private double[] calculateRates() {		
 		double[] rates = new double[scale];
 		double totalFitness = sum(fitnesses);
 		//calculate chosen rate
@@ -193,7 +192,7 @@ public abstract class GeneralGeneticAlgorithm {
 	public void initGeneration() {
 		species = new Individual[scale];
 		for (int i = 0; i < species.length; i++) {
-			species[i] = assistant.randomInitIndividual();
+			species[i] = assistant.individualnitIndividual();
 		}
 	}
 
