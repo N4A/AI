@@ -75,7 +75,6 @@ public class Analyze {
 		try {
 			bWriter.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

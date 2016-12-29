@@ -90,11 +90,11 @@ public class Main {
 		double mutateP = 0.2;
 		double crossP = 0.85;
 		int scale = 1500;
-		int iterationMax = 10000;
+		int iterationMax = 15000;
 		
 		File dir = new File("testknapsack");
 		File[] files = dir.listFiles();
-		for (int i = 0; i < files.length; i++) {
+		for (int i = 2; i < files.length; i++) {
 			File file = new File("testknapsack/Knapsack"+(i+1)+".txt");
 			//IGeneticAssistant assistant = new KnapSack1();
 			IGeneticAssistant assistant = new BasicKnapSack();

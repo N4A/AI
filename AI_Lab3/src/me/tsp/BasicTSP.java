@@ -38,6 +38,8 @@ public class BasicTSP implements IGeneticAssistant {
 				double y = Double.parseDouble(ixy[2]);
 				positions[index-1] = new Position(x, y);
 			}
+			
+			bReader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	

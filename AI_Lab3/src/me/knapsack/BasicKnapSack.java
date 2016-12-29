@@ -28,7 +28,6 @@ public class BasicKnapSack implements IGeneticAssistant {
 	 */
 	public void init(File file) {
 		try {
-			@SuppressWarnings("resource")
 			BufferedReader bReader = new BufferedReader(
 					new FileReader(file));
 			String[] first = bReader.readLine().trim().split(" ");
@@ -43,6 +42,8 @@ public class BasicKnapSack implements IGeneticAssistant {
 				weight[i] = Double.parseDouble(wv[0]);
 				value[i] = Double.parseDouble(wv[1]);
 			}
+			
+			bReader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
@@ -55,7 +56,13 @@ public class BasicKnapSack implements IGeneticAssistant {
 		Byte[] code = new Byte[codeLen];
 		Random random = new Random();
 		for (int i = 0; i < code.length; i++) {
-			code[i] = (byte) (random.nextInt(2));//0 or 1
+			int rm = random.nextInt(6);
+			if (rm == 0) {
+				code[i] = 1;
+			}
+			else {
+				code[i] = 0;
+			}
 		}
 		Individual<Byte> individual = new Individual<Byte>(code);
 		return individual;
