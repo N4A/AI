@@ -47,7 +47,7 @@ public class BasicTSP implements IGeneticAssistant {
 	 * @see me.genetic.IGeneticAssistant#randomInitIndividual()
 	 */
 	@Override
-	public Individual<?> individualnitIndividual() {
+	public Individual<?> initIndividual() {
 		Random random = new Random();
 		Integer[] code = new Integer[codeLen];
 		List<Integer> iList = new ArrayList<>();

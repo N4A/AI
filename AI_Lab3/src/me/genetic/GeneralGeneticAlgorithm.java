@@ -1,5 +1,8 @@
 package me.genetic;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+
 /**
  * @author Duocai Wu
  * @date 2016Äê12ÔÂ21ÈÕ
@@ -24,14 +27,24 @@ public abstract class GeneralGeneticAlgorithm {
 	protected double crossP;
 	protected double mutateP;
 	
+	private BufferedWriter bWriter = null;
+	
 	public GeneralGeneticAlgorithm(int iterationMax, int scale,
 			IGeneticAssistant assistant, double crossP,
-			double mutateP) {
+			double mutateP, BufferedWriter bWriter) {
 		this.scale = scale;
 		this.iterationMax = iterationMax;
 		this.assistant = assistant;
 		this.crossP = crossP;
 		this.mutateP = mutateP;
+		this.bWriter = bWriter;
+	}
+	
+	public GeneralGeneticAlgorithm(int iterationMax, int scale,
+			IGeneticAssistant assistant, double crossP,
+			double mutateP) {
+		this(iterationMax, scale,
+				assistant, crossP, mutateP,null);
 	}
 	
 	/**
@@ -71,6 +84,17 @@ public abstract class GeneralGeneticAlgorithm {
 					System.out.print(",average: " + curGAverageFitness);
 					System.out.println(",best in total: "+ bestFitness);
 					
+					if (bWriter != null) {
+						try {
+							bWriter.write("g: " + curGeneration);
+							bWriter.write(",best: " + curGBestFitness);
+							bWriter.write(",average: " + curGAverageFitness);
+							bWriter.write(",best in total: "+ bestFitness+"\n");
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+
+					}
 				}
 			}
 		}
@@ -192,7 +216,7 @@ public abstract class GeneralGeneticAlgorithm {
 	public void initGeneration() {
 		species = new Individual[scale];
 		for (int i = 0; i < species.length; i++) {
-			species[i] = assistant.individualnitIndividual();
+			species[i] = assistant.initIndividual();
 		}
 	}
 

@@ -51,7 +51,7 @@ public class BasicKnapSack implements IGeneticAssistant {
 	 * @see me.genetic.IGeneticAssistant#randomInitIndividual()
 	 */
 	@Override
-	public Individual<?> individualnitIndividual() {
+	public Individual<?> initIndividual() {
 		Byte[] code = new Byte[codeLen];
 		Random random = new Random();
 		for (int i = 0; i < code.length; i++) {
@@ -78,7 +78,7 @@ public class BasicKnapSack implements IGeneticAssistant {
 			}
 		}
 		
-		if (totalWeight > capacity) {
+		if (totalWeight > capacity + 1e-6) {
 			totalValue = 1e-10;
 		}
 

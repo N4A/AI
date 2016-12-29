@@ -1,5 +1,7 @@
 package me.genetic;
 
+import java.io.BufferedWriter;
+
 /**
  * @author Duocai Wu
  * @date 2016Äê12ÔÂ22ÈÕ
@@ -13,6 +15,11 @@ public class SequenceCross extends GeneralGeneticAlgorithm {
 	 */
 	public SequenceCross(int iterationMax, int scale, IGeneticAssistant assistant, double crossP, double mutateP) {
 		super(iterationMax, scale, assistant, crossP, mutateP);
+	}
+	
+	public SequenceCross(int iterationMax, int scale, IGeneticAssistant assistant, double crossP, double mutateP,
+			BufferedWriter bWriter) {
+		super(iterationMax, scale, assistant, crossP, mutateP,bWriter);
 	}
 
 	@Override

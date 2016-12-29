@@ -1,5 +1,7 @@
 package me.genetic;
 
+import java.io.BufferedWriter;
+
 /**
  * @author Duocai Wu
  * @date 2016Äê12ÔÂ21ÈÕ
@@ -17,6 +19,11 @@ public class RandomCross extends GeneralGeneticAlgorithm {
 	 */
 	public RandomCross(int iterationMax, int scale, IGeneticAssistant assistant, double crossP, double mutateP) {
 		super(iterationMax, scale, assistant, crossP, mutateP);
+	}
+
+	public RandomCross(int iterationMax, int scale, IGeneticAssistant assistant, double crossP, double mutateP,
+			BufferedWriter bWriter) {
+		super(iterationMax, scale, assistant, crossP, mutateP,bWriter);
 	}
 
 	//select
