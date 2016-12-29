@@ -21,8 +21,8 @@ public class Main {
 	static double[] crossPs = {0.3,0.5,0.7,0.85};
 	static int[] scales = {500,1000,1500};
 	public static void main(String[] args) {	
-		train();
-		//test();
+		//train();
+		test();
 	}
 	
 	//—µ¡∑±®∏Ê
@@ -87,17 +87,18 @@ public class Main {
 	
 	//≤‚ ‘
 	static void test() {
-		double mutateP = 0.15;
-		double crossP = 0.75;
+		double mutateP = 0.2;
+		double crossP = 0.85;
 		int scale = 1500;
 		int iterationMax = 10000;
 		
 		File dir = new File("testknapsack");
 		File[] files = dir.listFiles();
 		for (int i = 0; i < files.length; i++) {
+			File file = new File("testknapsack/Knapsack"+(i+1)+".txt");
 			//IGeneticAssistant assistant = new KnapSack1();
 			IGeneticAssistant assistant = new BasicKnapSack();
-			((BasicKnapSack)assistant).init(files[i]);
+			((BasicKnapSack)assistant).init(file);
 			
 			GeneralGeneticAlgorithm algorithm = 
 					new SequenceCross(iterationMax, scale,
@@ -112,6 +113,24 @@ public class Main {
 			System.out.print(algorithm.getBestGeneration()+":");
 			System.out.print(algorithm.getBestFitness()+",");
 			System.out.println(algorithm.getBestIndividual().toString());
+			
+			outputResult(algorithm, "testResult/Knapsack-"+(i+1)+"[14302010040].txt");
+		}
+	}
+	
+	//output result to the file
+	static void outputResult(GeneralGeneticAlgorithm ga,String path) {
+		try {
+			BufferedWriter bWriter = new BufferedWriter(
+					new FileWriter(new File(path)));
+			bWriter.write(ga.getBestFitness()+"\n");
+			Byte[] code = (Byte[]) ga.getBestIndividual().getCode();
+			for (int i = 0; i < code.length; i++) {
+				bWriter.write((i+1) + " " + code[i] + "\n");
+			}
+			bWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

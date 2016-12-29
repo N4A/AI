@@ -21,7 +21,8 @@ public class Main {
 	static double[] crossPs = {0.065,0.075,0.85};
 	static int[] scales = {4000,5000,6000};
 	public static void main(String[] args) { 
-		train();
+		//train();
+		test();
 	}
 	
 	//—µ¡∑±®∏Ê
@@ -84,30 +85,50 @@ public class Main {
 	
 	//≤‚ ‘
 	static void test() {
-		double mutateP = 0.04;
-		double crossP = 0.12;
-		int scale = 5000;
-		int iterationMax = 18000;
+		double mutateP = 0.025;
+		double crossP = 0.075;
+		int scale = 6000;
+		int iterationMax = 20000;
 		
 		File dir = new File("testtsp");
 		File[] files = dir.listFiles();
 		for (int i = 0; i < files.length; i++) {
-			//IGeneticAssistant assistant = new KnapSack1();
+			
+			File file = new File("testtsp/TSP"+(i+1)+".txt");
+			
 			IGeneticAssistant assistant = new BasicTSP();
-			((BasicTSP)assistant).init(files[i]);
+			((BasicTSP)assistant).init(file);
 			
 			GeneralGeneticAlgorithm algorithm = 
 					new SequenceCross(iterationMax, scale,
 							assistant, crossP, mutateP);
-//			algorithm = 
-//					new RandomCross(iterationMax, scale,
-//							assistant, crossP, mutateP);
+			algorithm = 
+					new RandomCross(iterationMax, scale,
+							assistant, crossP, mutateP);
 			
 			algorithm.start(true);
 			
 			System.out.print(algorithm.getBestGeneration()+":");
 			System.out.print(1/algorithm.getBestFitness()+",");
-			System.out.println(algorithm.getBestIndividual().toString());
+			System.out.println(algorithm.getBestIndividual().toString());	
+			
+			outputResult(algorithm, "testResult/TSP-"+(i+1)+"[14302010040].txt");
+		}
+	}
+	
+	//output result to the file
+	static void outputResult(GeneralGeneticAlgorithm ga,String path) {
+		try {
+			BufferedWriter bWriter = new BufferedWriter(
+					new FileWriter(new File(path)));
+			bWriter.write(1/ga.getBestFitness()+"\n");
+			Integer[] code = (Integer[]) ga.getBestIndividual().getCode();
+			for (int i = 0; i < code.length; i++) {
+				bWriter.write((code[i]+1) + "\n");
+			}
+			bWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }
